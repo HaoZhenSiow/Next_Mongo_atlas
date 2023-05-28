@@ -89,6 +89,10 @@ form button {
   border-radius: 4px;
   cursor: pointer;
 }
+form button:disabled {
+  background-color: lightslategrey;
+  cursor: not-allowed;
+}
 div.error {
   padding: 10px;
   background: #ffefef;
@@ -96,4 +100,8 @@ div.error {
   color: var(--error);
   border-radius: 4px;
   margin: 20px 0;
+}
+
+input.error {
+  border: 1px solid var(--error);
 }
