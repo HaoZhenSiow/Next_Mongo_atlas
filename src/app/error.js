@@ -1,9 +1,10 @@
-'use client'
-export default function error({ error, reset }) {
+'use client';
+ 
+export default function Error({ error, reset }) {
   return (
-    <>
-      <p>{error.message}</p>
-      <button onClick={reset}>reset</button>
-    </>
-  )
+    <div>
+      <h2>Something went wrong!</h2>
+      <button onClick={() => window.location.reload()}>Try again</button>
+    </div>
+  );
 }
