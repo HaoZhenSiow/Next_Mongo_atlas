@@ -1,7 +1,7 @@
 import './globals.css'
-import { Inter } from 'next/font/google'
+require('dotenv').config()
 
-const inter = Inter({ subsets: ['latin'] })
+import Navbar from '@/components/Navbar'
 
 export const metadata = {
   title: 'Create Next App',
@@ -11,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <Navbar/>
+        <div className="pages">
+          {children}
+        </div>
+      </body>
     </html>
   )
 }
