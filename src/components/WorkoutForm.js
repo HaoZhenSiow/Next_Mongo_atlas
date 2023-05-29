@@ -1,7 +1,7 @@
 'use client'
-
-import axios from "axios"
 import { useState } from "react"
+import axios from "axios"
+axios.defaults.validateStatus = false
 
 const WorkoutForm = () => {
 
@@ -52,39 +52,17 @@ const WorkoutForm = () => {
   }
 
   async function handleSubmit() {
-    try {
-      setLoading(true)
-await createWorkout()
-      resetForm()
-await revalidateIndexPage()
-      location.reload()
+    setLoading(true)
+    const { status, data } = await axios.post(`${window.location.origin}/api/workouts/`, workouts)
+    if (status !== 201) {
+      setError(data.error)
+      setEmptyFields(data.emptyFields)
+      return setLoading(false)
     } 
-    catch (error) {
-      const message = error.response.data.error
-      const emptyFields = error.response.data.emptyFields
-
-      if (message && emptyFields) {
-        setError(message)
-        setEmptyFields(emptyFields)
-      } else {
-        setError('Something went wrong. Please try again.')
-      }
-    } 
-    finally { setLoading(false) }
-  }
-
-  function resetForm() {
     setWorkouts({ title: '', load: '', reps: '' })
     setError(null)
     setEmptyFields([])
-  }
-
-  async function createWorkout() {
-    await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_SERVER}/api/workouts/`, workouts)
-  }
-
-  async function revalidateIndexPage() {
-    await axios.get(`${window.location.origin}/api/revalidate?path=/&secret=${process.env.NEXT_PUBLIC_REVALIDATE_SECRET}`)
+    location.reload()
   }
 }
 
