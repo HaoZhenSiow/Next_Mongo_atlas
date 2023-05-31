@@ -1,3 +1,5 @@
+import connectDB from "@/lib/connectDB"
+import workoutModel from "@/models/workout"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -6,13 +8,13 @@ import WorkoutForm from "@/components/WorkoutForm"
 
 
 export default async function Home() {
-  
-  const { status, data: workouts } = await axios.get(process.env.WORKOUTS_API)
+  connectDB()
+  const workouts = await workoutModel.find().sort({ createdAt: -1 })
   
   return (
     <div className="home">
       <div className="workouts">
-        {status === 200 && workouts.map(workout => (
+        {workouts && workouts.map(workout => (
           <WorkoutDetails workout={workout} key={workout._id} />
         ))}
       </div>

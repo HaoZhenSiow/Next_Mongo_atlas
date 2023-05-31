@@ -1,5 +1,4 @@
 'use client'
-
 import axios from "axios"
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
@@ -11,7 +10,7 @@ const WorkoutDetails = ({ workout }) => {
       <p><strong>Number of reps: </strong>{workout.reps}</p>
       {/*when the page revalidate on demand, the date might be different if use formDistancetoNow and will throw an error*/}
       {/* <p>{formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}</p> */}
-      <p>{workout.createdAt}</p>
+      <p>{JSON.stringify(workout.createdAt)}</p>
       <span className="material-symbols-outlined" onClick={handleDelete}>delete</span>
     </div>
   )

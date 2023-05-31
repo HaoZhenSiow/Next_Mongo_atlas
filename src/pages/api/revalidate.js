@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
+
   if (req.query.secret !== process.env.REVALIDATE_SECRET) {
-    return res.status(401).json({ message: "Invalid token" })
+    return res.status(500).json({ message: "Invalid token" })
   }
 
   try {
@@ -9,4 +10,5 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).send("Error revalidating")
   }
+  
 }
