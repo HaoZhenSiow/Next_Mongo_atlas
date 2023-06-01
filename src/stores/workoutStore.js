@@ -1,5 +1,3 @@
-'use client'
-
 import { createContextStore, action } from 'easy-peasy';
 
 const WorkoutStore = createContextStore({
