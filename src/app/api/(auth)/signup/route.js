@@ -1,8 +1,8 @@
 import connectDB from "@/lib/connectDB"
+import { signup } from "@/controllers/authController"
 
 connectDB()
 
-// login api
 export async function POST(req) {
-  return new Response('signup api')
+  return await signup(req)
 }

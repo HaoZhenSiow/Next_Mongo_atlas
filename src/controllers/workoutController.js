@@ -1,4 +1,4 @@
-import workout from '../models/workoutModel'
+import workoutModel from '../models/workoutModel'
 import { res, revalidateIndex, isValidId } from '@/lib/utils'
 
 export async function createWorkout(req) {
@@ -16,7 +16,7 @@ export async function createWorkout(req) {
   }
 
   try {
-    const new_workout = await workout.create(payload)
+    const new_workout = await workoutModel.create(payload)
     await revalidateIndex(origin)
     return res(new_workout, 201)
   } catch (error) {
@@ -32,10 +32,10 @@ export async function getWorkouts(req) {
   }
   try {
     if (isValidId(id)) {
-      const Workout = await workout.findById(id)
+      const Workout = await workoutModel.findById(id)
       return Workout ? res(Workout, 200) : res('no such workout', 404)
     }
-    const workouts = await workout.find().sort({ createdAt: -1 })
+    const workouts = await workoutModel.find().sort({ createdAt: -1 })
     return res(workouts, 200)
   } catch (error) {
     return res('Something went wrong. Please try again.', 500)
@@ -49,7 +49,7 @@ export async function deleteWorkout(req) {
     return res('invalid ID', 400)
   }
   try {
-    const Workout = await workout.findByIdAndDelete(id)
+    const Workout = await workoutModel.findByIdAndDelete(id)
     if (!Workout) return res('no such workout', 404)
     await revalidateIndex(origin)
     return res(Workout, 200)
