@@ -17,7 +17,7 @@ export async function createWorkout(req) {
 
   try {
     const new_workout = await workoutModel.create(payload)
-    // await revalidateIndex(origin)
+    await revalidateIndex(origin)
     return res(new_workout, 201)
   } catch (error) {
     return res({ error: 'Something went wrong. Please try again.' }, 500)
@@ -51,7 +51,7 @@ export async function deleteWorkout(req) {
   try {
     const Workout = await workoutModel.findByIdAndDelete(id)
     if (!Workout) return res('no such workout', 404)
-    // await revalidateIndex(origin)
+    await revalidateIndex(origin)
     return res(Workout, 200)
   } catch (error) {
     return res('Something went wrong. Please try again.', 500)
