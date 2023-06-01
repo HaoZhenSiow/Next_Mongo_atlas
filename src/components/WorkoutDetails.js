@@ -10,13 +10,13 @@ const WorkoutDetails = ({ workout }) => {
       <p><strong>Number of reps: </strong>{workout.reps}</p>
       {/*when the page revalidate on demand, the date might be different if use formDistancetoNow and will throw an error*/}
       {/* <p>{formatDistanceToNow(new Date(workout.createdAt), { addSuffix: true })}</p> */}
-      <p>{JSON.stringify(workout.createdAt)}</p>
+      <p>{workout.createdAt}</p>
       <span className="material-symbols-outlined" onClick={handleDelete}>delete</span>
     </div>
   )
 
   async function handleDelete() {
-    await axios.delete(`${window.location.origin}/api/workouts/?id=${workout['_id']}`)
+    await axios.delete(`${process.env.NEXT_PUBLIC_WORKOUT_API}?id=${workout._id}`)
     location.reload()
   }
 }

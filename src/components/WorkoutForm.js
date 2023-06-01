@@ -53,7 +53,7 @@ const WorkoutForm = () => {
 
   async function handleSubmit() {
     setLoading(true)
-    const { status, data } = await axios.post(`${window.location.origin}/api/workouts/`, workouts)
+    const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts)
     if (status !== 201) {
       setError(data.error)
       setEmptyFields(data.emptyFields)

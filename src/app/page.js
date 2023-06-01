@@ -1,5 +1,5 @@
 import connectDB from "@/lib/connectDB"
-import workoutModel from "@/models/workout"
+import workoutModel from "@/models/workoutModel"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -9,7 +9,8 @@ import WorkoutForm from "@/components/WorkoutForm"
 
 export default async function Home() {
   connectDB()
-  const workouts = await workoutModel.find().sort({ createdAt: -1 })
+  const workoutsFetched = await workoutModel.find().sort({ createdAt: -1 })
+  const workouts = JSON.parse(JSON.stringify(workoutsFetched))
   
   return (
     <div className="home">

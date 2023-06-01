@@ -1,8 +1,5 @@
-import axios from "axios"
-axios.defaults.validateStatus = false
-
 import connectDB from "@/lib/connectDB"
-import { createWorkout, getWorkouts, deleteWorkout } from "@/controllers/workout"
+import { createWorkout, getWorkouts, deleteWorkout } from "@/controllers/workoutController"
 
 connectDB()
 
