@@ -18,12 +18,12 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       </head>
       <body>
-        <CounterStore.Provider>
+        <WorkoutStore.Provider>
           <Navbar/>
           <div className="pages">
             {children}
           </div>
-        </CounterStore.Provider>
+        </WorkoutStore.Provider>
       </body>
     </html>
   )
