@@ -1,3 +1,4 @@
+'use client'
 import axios from "axios"
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 

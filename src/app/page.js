@@ -9,10 +9,13 @@ import WorkoutForm from "@/components/WorkoutForm"
 // import WorkoutStore from "@/stores/workoutStore"
 
 import connectDB from "@/lib/connectDB"
+import workoutModel from "@/models/workoutModel"
 
-export default function Home() {
-  const workouts = []
+export default async function Home() {
   connectDB()
+  const workoutsFetched = await workoutModel.find().sort({ createdAt: -1 })
+  const workouts = JSON.parse(JSON.stringify(workoutsFetched))
+  
   // const { workouts } = WorkoutStore.useStoreState(state => state)
   // const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
   // useEffect(() => {
