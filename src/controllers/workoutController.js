@@ -1,4 +1,4 @@
-import workout from '../models/workout'
+import workout from '../models/workoutModel'
 import { res, revalidateIndex, isValidId } from '@/lib/utils'
 
 export async function createWorkout(req) {
