@@ -17,6 +17,7 @@ const WorkoutDetails = ({ workout }) => {
 
   async function handleDelete() {
     await axios.delete(`${process.env.NEXT_PUBLIC_WORKOUT_API}?id=${workout._id}`)
+    // await axios.delete(process.env.NEXT_PUBLIC_WORKOUT_API, { params: { id: workout._id } })
     location.reload()
   }
 }

@@ -4,7 +4,7 @@ import { decodeToken } from "./_lib/jwt"
 
 export async function middleware(request) {
   // verify authentication
-  const authorization = request.headers.get('authorization')
+  const authorization = request.headers.get('Authorization')
   const { origin, pathname } = request.nextUrl
 
   if (!authorization && pathname.startsWith('/')) {
