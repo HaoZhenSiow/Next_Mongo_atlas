@@ -1,8 +1,7 @@
-'use client'
 require('dotenv').config()
 import './globals.css'
-import Store from '@/stores/Store'
-import Navbar from '@/components/Navbar'
+import Store from '@/_stores/Store'
+import Navbar from '@/_components/Navbar'
 
 
 export const metadata = {

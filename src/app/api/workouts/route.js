@@ -1,5 +1,5 @@
-import connectDB from "@/lib/connectDB"
-import { createWorkout, getWorkouts, deleteWorkout } from "@/controllers/workoutController"
+import connectDB from "@/_lib/connectDB"
+import { createWorkout, getWorkouts, deleteWorkout } from "@/_controllers/workoutController"
 
 connectDB()
 
