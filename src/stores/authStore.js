@@ -1,6 +1,6 @@
-import { createContextStore, action } from 'easy-peasy';
+import { createContextStore, action, persist } from 'easy-peasy';
 
-const authStore = createContextStore({
+const AuthStore = createContextStore(persist({
   email: null,
   token: null,
   login: action((state, payload) => {
@@ -11,6 +11,6 @@ const authStore = createContextStore({
     state.email = null;
     state.token = null;
   })
-});
+}));
 
-export default authStore;
+export default AuthStore;
