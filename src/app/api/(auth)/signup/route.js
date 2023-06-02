@@ -1,5 +1,5 @@
-import connectDB from "@/lib/connectDB"
-import { signup } from "@/controllers/authController"
+import connectDB from "@/_lib/connectDB"
+import { signup } from "@/_controllers/authController"
 
 connectDB()
 

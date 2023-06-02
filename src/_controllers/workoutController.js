@@ -1,5 +1,5 @@
-import workoutModel from '../models/workoutModel'
-import { res, revalidateIndex, isValidId } from '@/lib/utils'
+import workoutModel from '../_models/workoutModel'
+import { res, revalidateIndex, isValidId } from '@/_lib/utils'
 
 export async function createWorkout(req) {
   const { origin } = new URL(req.url)

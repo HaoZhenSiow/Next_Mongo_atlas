@@ -3,13 +3,13 @@
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-import WorkoutDetails from "@/components/WorkoutDetails"
-import WorkoutForm from "@/components/WorkoutForm"
+import WorkoutDetails from "@/_components/WorkoutDetails"
+import WorkoutForm from "@/_components/WorkoutForm"
 
 // import WorkoutStore from "@/stores/workoutStore"
 
-import connectDB from "@/lib/connectDB"
-import workoutModel from "@/models/workoutModel"
+import connectDB from "@/_lib/connectDB"
+import workoutModel from "@/_models/workoutModel"
 
 export default async function Home() {
   connectDB()

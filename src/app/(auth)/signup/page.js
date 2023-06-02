@@ -1,41 +1,27 @@
 'use client'
-import axios from "axios"
-axios.defaults.validateStatus = false
+import useLogin from "@/_hooks/useLogin"
 
-import AuthStore from "@/stores/authStore"
-
-export default async function Home() {
-  const { login } = AuthStore.useStoreActions(actions => actions)
-
+export default function Home() {
+  const { handleSignup, error, isLoading } = useLogin()
   return (
-    <form className="signup" onSubmit={handleSubmit}>
+    <form className="signup" onSubmit={handleSignup}>
       <h3>Sign Up</h3>
       
       <label>Email address:</label>
       <input 
         type="email"
         name="email"
+        required
       />
       <label>Password:</label>
       <input 
         type="password" 
         name="password"
+        required
       />
 
-      <button name="btn-submit">Sign up</button>
+      <button name="btn-submit" disabled={isLoading}>Sign up</button>
+      {error && <div className="error">{error}</div>}
     </form>
   )
-
-  async function handleSubmit(e) {
-    e.preventDefault()
-    const form = e.target
-    const email = form.email.value
-    const password = form.password.value
-    form['btn-submit'].disabled = true
-    const { status, data } = await axios.post('/api/signup', {email, password})
-    if (status === 200) {
-      login(data)
-    }
-    form['btn-submit'].disabled = false
-  }
 }
