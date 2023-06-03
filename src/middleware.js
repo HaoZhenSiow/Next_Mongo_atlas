@@ -3,7 +3,6 @@ import { decodeToken } from "./_lib/jwt"
 
 
 export async function middleware(request) {
-  // verify authentication
   const token = request.cookies.get('token') ? request.cookies.get('token') : null
   
   const { origin, pathname } = request.nextUrl
@@ -16,20 +15,21 @@ export async function middleware(request) {
     return NextResponse.redirect(`${origin}/`)
   }
   
-  // if (!authorization) {
-  //   return NextResponse.json('Authorization Token required', { status: 401 })
-  // }
+  if (!token && pathname.startsWith('/api/workouts')) {
+    return NextResponse.json('Authorization Token required', { status: 401 })
+  }
 
-  
-  // try {
-  //   await decodeToken(token)
-  //   const response = NextResponse.next()
-  //   return response
-  // } catch (error) {
-  //   return NextResponse.json('Request is not authorized', { status: 401 })
-  // }
+  if (token && pathname.startsWith('/api/workouts')) {
+    try {
+      await decodeToken(token.value)
+      return NextResponse.next()
+    } catch (error) {
+      return NextResponse.json('Request is not authorized', { status: 401 })
+    }
+  }
+
 }
 
 export const config = {
-  matcher: ['/', '/login', '/signup']
+  matcher: ['/', '/login', '/signup', '/api/workouts']
 }
