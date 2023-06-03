@@ -1,15 +1,11 @@
 'use client'
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
 import AuthStore from "@/_stores/authStore"
 
 const Navbar = () => {
-
-  const rotuer = useRouter()
-
   const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
@@ -40,7 +36,7 @@ const Navbar = () => {
   async function logoutHandle() {
     logout()
     await axios.post('/api/auth/', { request: 'logout' })
-    rotuer.replace('/login')
+    window.location.replace('/login')
   }
 }
 

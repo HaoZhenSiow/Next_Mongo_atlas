@@ -1,7 +1,7 @@
 import { createContextStore, action } from 'easy-peasy';
 
 const WorkoutStore = createContextStore({
-  workouts: null,
+  workouts: [],
   loadWorkouts: action((state, payload) => {
     state.workouts = payload
   }),

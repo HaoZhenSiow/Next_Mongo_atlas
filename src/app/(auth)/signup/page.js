@@ -1,6 +1,5 @@
 'use client'
 import { useRef } from "react"
-import { useRouter } from 'next/navigation';
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -8,7 +7,6 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
-  const router = useRouter()
   const { login } = AuthStore.useStoreActions(actions => actions)
 
 
@@ -50,7 +48,7 @@ export default function Home() {
     if (status === 200) {
       login(data)
       form.reset()
-      router.replace('/')
+      window.location.replace('/')
     } else {
       errRef.current.hidden = false
       errRef.current.innerHTML = data
