@@ -20,7 +20,7 @@ const Navbar = () => {
           {email && (
             <div>
               <span>{email}</span>
-              <button onClick={logout}>Log out</button>
+              <button onClick={logoutHandle}>Log out</button>
             </div>
           )}
           {!email && (
@@ -36,7 +36,7 @@ const Navbar = () => {
 
   async function logoutHandle() {
     logout()
-    await axios.get('/api/logout/')
+    await axios.post('/api/auth/', { request: 'logout' })
   }
 }
 

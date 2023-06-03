@@ -15,7 +15,7 @@ export default function Home() {
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
  
   useEffect(() => {
-    const token = JSON.parse(sessionStorage['[EasyPeasyStore][0]']).data.token
+    const token = sessionStorage['[EasyPeasyStore][0]'] ? JSON.parse(sessionStorage['[EasyPeasyStore][0]']).data.token : null
 
     async function fetchWorkouts() {
       const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API, {
