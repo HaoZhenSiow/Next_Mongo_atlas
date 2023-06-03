@@ -21,7 +21,11 @@ const WorkoutDetails = ({ workout }) => {
   )
 
   async function handleDelete() {
-    const { status, data } = await axios.delete(process.env.NEXT_PUBLIC_WORKOUT_API, { params: { id: workout._id } })
+    const token = JSON.parse(sessionStorage['[EasyPeasyStore][0]']).data.token
+    const { status, data } = await axios.delete(process.env.NEXT_PUBLIC_WORKOUT_API, { 
+      params: { id: workout._id },
+      headers: { Authorization: `Bearer ${token}` }
+    })
     status === 200 && removeWorkout(data)
   }
 }

@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import { NextResponse } from "next/server";
 import { genToken } from "@/_lib/jwt";
 
 import userModel from "@/_models/userModel";
@@ -11,7 +12,10 @@ export async function login(req) {
     if (!user) return res('User not found.', 404)
     if (!await bcrypt.compare(password, user.password)) {return res('Password is incorrect.', 400)}
     const token = await genToken({ id: user._id })
-    return res({ email, token }, 200)
+    const response = NextResponse.json({ email, token }, { status: 200 })
+    response.cookies.set('token', token)
+    response.cookies.set('user', user._id)
+    return response
   } catch (error) {
     return res('Something went wrong, please try again.', 400)
   }
@@ -26,8 +30,22 @@ export async function signup(req) {
     if (exist) return res('User already exist.', 400)
     const user = await userModel.create({ email, password: hashPassword })
     const token = await genToken({ id: user._id })
-    return res({ email, token }, 200)
+    const response = NextResponse.json({ email, token }, { status: 200 })
+    response.cookies.set('token', token)
+    response.cookies.set('user', user._id)
+    return response
   } catch (error) {
     return res('Something went wrong, please try again.', 500)
+  }
+}
+
+export async function logout() {
+  try {
+    const response = NextResponse.json('logout', { status: 200 })
+    response.cookies.delete('token')
+    response.cookies.delete('user')
+    return response
+  } catch (error) {
+    return res('logout but cant delete cookie', 200)
   }
 }
