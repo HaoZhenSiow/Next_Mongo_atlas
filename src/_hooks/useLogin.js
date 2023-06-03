@@ -12,7 +12,7 @@ export default function useLogin() {
   const handleLogin = createHandler('login')
   const handleSignup = createHandler('signup')
 
-  function createHandler(requestType) {
+  function createHandler(request) {
     return async function (e) {
       e.preventDefault()
       setError(null)
@@ -20,8 +20,9 @@ export default function useLogin() {
 
       const email = e.target.email.value
       const password = e.target.password.value
+      const payload = { request, email, password }
 
-      const { status, data } = await axios.post(`/api/${requestType}`, {email, password})
+      const { status, data } = await axios.post('/api/auth/', payload)
       if (status === 200) {
         login(data)
       } else {

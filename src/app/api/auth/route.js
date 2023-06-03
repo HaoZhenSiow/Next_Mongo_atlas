@@ -1,16 +1,33 @@
 import bcrypt from "bcrypt"
 import { NextResponse } from "next/server";
+import connectDB from "@/_lib/connectDB"
 import { genToken } from "@/_lib/jwt";
-
-import userModel from "@/_models/userModel";
 import { res } from "@/_lib/utils";
+import userModel from "@/_models/userModel";
 
-export async function login(req) {
-  const { email, password } = await req.json()
+
+connectDB()
+
+export async function POST(req) {
+  const { request = '', email = '', password = '' } = await req.json()
+  switch (request) {
+    case "login":
+      return await login(email, password)
+    case "signup":
+      return await signup(email, password)
+    case "logout":
+      return await logout()
+    default:
+      return res('Invalid request.', 400)
+  }
+}
+
+async function login(email, password) {
   try {
     const user = await userModel.findOne({ email })
     if (!user) return res('User not found.', 404)
-    if (!await bcrypt.compare(password, user.password)) {return res('Password is incorrect.', 400)}
+    const passwordMatch = await bcrypt.compare(password, user.password)
+    if (!passwordMatch) return res('Password is incorrect.', 400)
     const token = await genToken({ id: user._id })
     const response = NextResponse.json({ email, token }, { status: 200 })
     response.cookies.set('token', token)
@@ -21,8 +38,7 @@ export async function login(req) {
   }
 }
 
-export async function signup(req) {
-  const { email, password } = await req.json()
+async function signup(email, password) {
   const salt = await bcrypt.genSalt(10)
   const hashPassword = await bcrypt.hash(password, salt)
   try {
@@ -39,8 +55,8 @@ export async function signup(req) {
   }
 }
 
-export async function logout(req) {
-  const response = NextResponse.json('logout', { status: 200 })
+async function logout() {
+  const response = NextResponse.json('logout success', { status: 200 })
   response.cookies.delete('token')
   response.cookies.delete('user')
   return response
