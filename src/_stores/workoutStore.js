@@ -7,6 +7,11 @@ const WorkoutStore = createContextStore({
   }),
   insertWorkout: action((state, payload) => {
     state.workouts.unshift(payload)
+  }),
+  removeWorkout: action((state, payload) => {
+    state.workouts = state.workouts.filter(
+      workout => workout._id !== payload._id
+    )
   })
 });
 
