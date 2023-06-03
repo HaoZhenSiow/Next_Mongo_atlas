@@ -22,7 +22,6 @@ const Navbar = () => {
           )}
           {!email && (
             <div>
-              <p>{email || ''}</p>
               <Link href="/login">Login</Link>
               <Link href="/signup">Signup</Link>
             </div>
