@@ -7,10 +7,9 @@ export async function middleware(request) {
   const authorization = request.headers.get('Authorization')
   const { origin, pathname } = request.nextUrl
 
-  if (!authorization && pathname.startsWith('/')) {
-    console.log('redirecting to login', origin)
-    return NextResponse.redirect(`${origin}/login`)
-  }
+  // if (!authorization && pathname.startsWith('/')) {
+  //   return NextResponse.redirect(`${origin}/login`)
+  // }
   
   if (!authorization) {
     return NextResponse.json('Authorization Token required', { status: 401 })
@@ -30,5 +29,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/api/test/', '/api/workouts/']
+  matcher: ['/api/test/']
 }

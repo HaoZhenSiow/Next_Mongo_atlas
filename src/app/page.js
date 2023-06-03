@@ -8,27 +8,20 @@ import WorkoutForm from "@/_components/WorkoutForm"
 
 import WorkoutStore from "@/_stores/workoutStore"
 
-// import connectDB from "@/_lib/connectDB"
-// import workoutModel from "@/_models/workoutModel"
-
-export default async function Home() {
-  // connectDB()
-  // const workoutsFetched = await workoutModel.find().sort({ createdAt: -1 })
-  // const workouts = JSON.parse(JSON.stringify(workoutsFetched))
-  
+export default function Home() {  
   const { workouts } = WorkoutStore.useStoreState(state => state)
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
+ 
   useEffect(() => {
-    const fetchWorkouts = async () => {
+    async function fetchWorkouts() {
       const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
-      console.log(data);
       if (status === 200) {
         loadWorkouts(data)
       }
     }
     fetchWorkouts()
-    
   }, [loadWorkouts])
+
   
   return (
     <div className="home">

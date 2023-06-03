@@ -62,7 +62,7 @@ const WorkoutForm = () => {
     setWorkouts({ title: '', load: '', reps: '' })
     setError(null)
     setEmptyFields([])
-    location.reload()
+    return setLoading(false)
   }
 }
 
