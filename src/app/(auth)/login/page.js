@@ -1,8 +1,16 @@
 'use client'
-import useLogin from "@/_hooks/useLogin"
+import { useRef } from "react"
+import { useRouter } from 'next/navigation';
+import axios from "axios"
+axios.defaults.validateStatus = false
+
+import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
-  const { handleLogin, error, isLoading } = useLogin()
+  const errRef = useRef()
+  const router = useRouter()
+  const { login } = AuthStore.useStoreActions(actions => actions)
+ 
   return (
     <form className="login" onSubmit={handleLogin}>
       <h3>Log In</h3>
@@ -20,8 +28,32 @@ export default function Home() {
         required
       />
 
-      <button name="btn-login" disabled={isLoading}>Log in</button>
-      {error && <div className="error">{error}</div>}
+      <button name="submit">Log in</button>
+      <div className="error" ref={errRef} hidden></div>
     </form>
   )
+
+  async function handleLogin(e) {
+    e.preventDefault()
+
+    const form = e.target,
+          email = form.email,
+          password = form.password,
+          button = form.submit,
+          payload = { request: 'login', email: email.value, password: password.value }
+
+    button.disabled = true
+    errRef.current.hidden = true
+
+    const { status, data } = await axios.post('/api/auth/', payload)
+    if (status === 200) {
+      login(data)
+      form.reset()
+      router.replace('/')
+    } else {
+      errRef.current.hidden = false
+      errRef.current.innerHTML = data
+    }
+    button.disabled = false
+  }
 }
