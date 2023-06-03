@@ -38,14 +38,17 @@ const WorkoutForm = () => {
 
   async function handleSubmit(e) {
     e.preventDefault()
+
     const form = e.target,
           title = form.title,
           load = form.load,
           reps = form.reps,
           button = form.submit,
           workouts = { title: title.value, load: load.value, reps: reps.value }
+
     button.disabled = true
     errRef.current.hidden = true
+
     for (let x in workouts) {
       if (!workouts[x]) {
         addErrorClass(form[x])
@@ -54,7 +57,14 @@ const WorkoutForm = () => {
         removeErrorClass(form[x])
       }
     }
-    const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts)
+
+    const token = JSON.parse(sessionStorage['[EasyPeasyStore][0]']).data.token
+    const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
     if (status === 201) {
       insertWorkout(data)
       form.reset()

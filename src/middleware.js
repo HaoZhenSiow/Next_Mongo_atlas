@@ -5,10 +5,16 @@ import { decodeToken } from "./_lib/jwt"
 export async function middleware(request) {
   // verify authentication
   const authorization = request.headers.get('Authorization')
-  const { origin, pathname } = request.nextUrl
+  const ip = request.cookies
+  console.log('middleware: ', ip);
+  // const { origin, pathname } = request.nextUrl
 
   // if (!authorization && pathname.startsWith('/')) {
   //   return NextResponse.redirect(`${origin}/login`)
+  // }
+
+  // if (authorization && pathname.startsWith('/login')) {
+  //   return NextResponse.redirect(`${origin}/`)
   // }
   
   if (!authorization) {
@@ -18,10 +24,8 @@ export async function middleware(request) {
   const token = authorization.split(' ')[1]
   
   try {
-    const { id } = await decodeToken(token)
-    console.log(id);
+    await decodeToken(token)
     const response = NextResponse.next()
-    response.cookies.set('id', id)
     return response
   } catch (error) {
     return NextResponse.json('Request is not authorized', { status: 401 })
@@ -29,5 +33,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/api/test/']
+  matcher: ['/api/workouts/']
 }

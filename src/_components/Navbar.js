@@ -1,5 +1,8 @@
 'use client'
 import Link from "next/link"
+import axios from "axios"
+axios.defaults.validateStatus = false
+
 import AuthStore from "@/_stores/authStore"
 
 const Navbar = () => {
@@ -30,6 +33,11 @@ const Navbar = () => {
       </div>
     </header>
   )
+
+  async function logoutHandle() {
+    logout()
+    await axios.get('/api/logout/')
+  }
 }
 
 export default Navbar

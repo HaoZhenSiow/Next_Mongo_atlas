@@ -1,14 +1,9 @@
 import { NextResponse } from "next/server";
-import connectDB from "@/_lib/connectDB"
-
-connectDB()
 
 export async function GET(req) {
   
-  
-  const val = req.cookies.get('id')
-  console.log(val)
-
-
-  return NextResponse.json('val', { status: 201 })
+  const response = NextResponse.json('vasl', { status: 201 })
+  response.cookies.delete('id')
+  return response
+  // return NextResponse.json('val', { status: 201 })
 }
