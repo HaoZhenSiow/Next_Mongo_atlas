@@ -58,12 +58,7 @@ const WorkoutForm = () => {
       }
     }
 
-    const token = JSON.parse(sessionStorage['[EasyPeasyStore][0]']).data.token
-    const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts)
 
     if (status === 201) {
       insertWorkout(data)
