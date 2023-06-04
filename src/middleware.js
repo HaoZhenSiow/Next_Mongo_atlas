@@ -3,6 +3,7 @@ import { decodeToken } from "./_lib/jwt"
 
 
 export async function middleware(request) {
+
   const token = request.cookies.get('token') ? request.cookies.get('token') : null
   
   const { origin, pathname } = request.nextUrl

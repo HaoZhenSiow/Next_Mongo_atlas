@@ -1,5 +1,6 @@
 require('dotenv').config()
 import './globals.css'
+import ClientOnly from '@/_components/ClientOnly'
 import Store from '@/_stores/Store'
 import Navbar from '@/_components/Navbar'
 
@@ -16,12 +17,14 @@ export default async function RootLayout({ children }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       </head>
       <body>
-        <Store>
-          <Navbar/>
-          <div className="pages">
-            {children}
-          </div>
-        </Store>
+        <ClientOnly>
+          <Store>
+            <Navbar/>
+            <div className="pages">
+              {children}
+            </div>
+          </Store>
+        </ClientOnly>
       </body>
     </html>
   )
