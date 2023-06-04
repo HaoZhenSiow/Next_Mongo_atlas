@@ -1,10 +1,9 @@
-import bcrypt from "bcrypt"
-import { NextResponse } from "next/server";
 import connectDB from "@/_lib/connectDB"
+import userModel from "@/_models/userModel";
+import { NextResponse } from "next/server";
+import bcrypt from "bcrypt"
 import { genToken } from "@/_lib/jwt";
 import { res } from "@/_lib/utils";
-import userModel from "@/_models/userModel";
-
 
 connectDB()
 

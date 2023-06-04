@@ -4,8 +4,6 @@ import axios from 'axios'
 axios.defaults.validateStatus = false
 
 export function res(res, status) {
-  // const data = typeof res === 'object' ? JSON.stringify(res) : res
-  // return new Response(data, { status: status })
   return NextResponse.json(res, { status: status })
 }
 
