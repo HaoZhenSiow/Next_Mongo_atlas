@@ -18,7 +18,7 @@ export async function DELETE(req) {
 }
 
 async function createWorkout(req) {
-  const { origin } = new URL(req.url)
+  // const { origin } = req.nextUrl
   const payload = await req.json()
  
   try {
@@ -33,7 +33,7 @@ async function createWorkout(req) {
 }
 
 async function getWorkouts(req) {
-  const { searchParams } = new URL(req.url)
+  const { searchParams } = req.nextUrl
   const id = searchParams.get('id')
   const user_id = req.cookies.get('user').value
 
@@ -54,7 +54,7 @@ async function getWorkouts(req) {
 }
 
 async function deleteWorkout(req) {
-  const { origin, searchParams } = new URL(req.url)
+  const { origin, searchParams } = req.nextUrl
   const id = searchParams.get('id')
   if (!isValidId(id)) {
     return res('invalid ID', 400)
