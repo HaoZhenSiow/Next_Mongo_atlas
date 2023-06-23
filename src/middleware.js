@@ -3,10 +3,10 @@ import { decodeToken } from "./_lib/jwt"
 
 
 export async function middleware(request) {
-
   const token = request.cookies.get('token') ? request.cookies.get('token') : null
-  
   const { origin, pathname } = request.nextUrl
+  
+  // let response = NextResponse.next()
 
   if (!token && pathname === '/') {
     return NextResponse.redirect(`${origin}/login`)
@@ -29,6 +29,12 @@ export async function middleware(request) {
     }
   }
 
+  // if (!request.cookies.get('ip')) {
+  //   const ip = request.headers.get('x-forwarded-for')
+  //   response.cookies.set('ip', ip)
+  // }
+
+  // return response
 }
 
 export const config = {
