@@ -1,6 +1,7 @@
 'use client'
-import { useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
+import tracker from "@/_lib/tracker"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -11,6 +12,9 @@ export default function Home() {
   const errRef = useRef()
   const { login } = AuthStore.useStoreActions(actions => actions)
 
+  // useEffect(() => {
+  //   tracker()
+  // }, [])
 
   return (
     <form className="signup" onSubmit={handleSignup}>
