@@ -27,7 +27,7 @@ export async function middleware(request) {
 
   if (token && pathname.startsWith('/api/workouts')) {
     try {
-      await decodeToken(token.value)
+      // await decodeToken(token.value)
       return NextResponse.next()
     } catch (error) {
       return NextResponse.json(`${token.value} Request is not authorized`, { status: 401 })
