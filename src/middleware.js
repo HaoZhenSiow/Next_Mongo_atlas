@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { decodeToken } from "./_lib/jwt"
+import { jwtVerify } from "jose"
 
 
 export async function middleware(request) {
@@ -27,10 +28,13 @@ export async function middleware(request) {
 
   if (token && pathname.startsWith('/api/workouts')) {
     try {
+      const encoder = new TextEncoder();
+      const secretKey = encoder.encode(process.env.JWT_SECRET)
+      await jwtVerify(token, secretKey)
       // await decodeToken(token.value)
       return NextResponse.next()
     } catch (error) {
-      return NextResponse.json(`${token.value} Request is not authorized`, { status: 401 })
+      return NextResponse.json(`${secretKey} Request is not authorized`, { status: 401 })
     }
   }
 
