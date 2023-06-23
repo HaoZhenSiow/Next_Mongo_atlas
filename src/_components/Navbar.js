@@ -39,7 +39,6 @@ const Navbar = () => {
   async function logoutHandle() {
     logout()
     await axios.post('/api/auth/', { request: 'logout' })
-    .then()
     router.push('/login')
   }
 }

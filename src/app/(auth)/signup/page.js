@@ -1,6 +1,5 @@
 'use client'
 import { useEffect, useRef } from "react"
-import { useRouter } from "next/navigation"
 import tracker from "@/_lib/tracker"
 import axios from "axios"
 axios.defaults.validateStatus = false
@@ -8,7 +7,6 @@ axios.defaults.validateStatus = false
 import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
-  const router = useRouter()
   const errRef = useRef()
   const { login } = AuthStore.useStoreActions(actions => actions)
 
@@ -54,7 +52,7 @@ export default function Home() {
     if (status === 200) {
       login(data)
       form.reset()
-      router.push('/')
+      location.replace(`${location.origin}/`)
     } else {
       errRef.current.hidden = false
       errRef.current.innerHTML = data
