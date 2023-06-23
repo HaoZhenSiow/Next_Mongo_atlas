@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { decodeToken } from "./_lib/jwt"
-// import { jwtVerify } from "jose"
+import { jwtVerify } from "jose"
 
 
 export async function middleware(request) {
@@ -30,7 +30,7 @@ export async function middleware(request) {
     try {
       const encoder = new TextEncoder();
       const secretKey = encoder.encode(process.env.JWT_SECRET)
-      // await jwtVerify(token, secretKey)
+      await jwtVerify(token.value, secretKey)
       // await decodeToken(token.value)
       return NextResponse.next()
     } catch (error) {
