@@ -14,7 +14,6 @@ export default function Home() {
  
   useEffect(() => {
     async function fetchWorkouts() {
-      console.log(location.origin);
       const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
       if (status === 200) {
         loadWorkouts(data)
