@@ -28,10 +28,10 @@ export async function middleware(request) {
 
   if (token && pathname.startsWith('/api/workouts')) {
     try {
-      const encoder = new TextEncoder();
-      const secretKey = encoder.encode('e7e6e28ebe6571598cca056b963e207582ed9239')
-      await jwtVerify(token.value, secretKey)
-      // await decodeToken(token.value)
+      // const encoder = new TextEncoder();
+      // const secretKey = encoder.encode('e7e6e28ebe6571598cca056b963e207582ed9239')
+      // await jwtVerify(token.value, secretKey)
+      await decodeToken(token.value)
       return NextResponse.next()
     } catch (error) {
       return NextResponse.json(`Request is not authorized`, { status: 401 })
