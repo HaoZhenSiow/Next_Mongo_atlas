@@ -12,7 +12,7 @@ export async function genToken(payload) {
 
 export async function decodeToken(token) {
   const encoder = new TextEncoder();
-  const secretKey = encoder.encode('e7e6e28ebe6571598cca056b963e207582ed9239')
+  const secretKey = encoder.encode(process.env.JWT_SECRET)
   const { payload } = await jwtVerify(token, secretKey)
   return payload
 }
