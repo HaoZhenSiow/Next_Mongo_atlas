@@ -21,9 +21,9 @@ export default async function RootLayout({ children }) {
       <body>
         {/* <ClientOnly> */}
           <Store>
-            {/* <Suspense fallback={null}>
+            <Suspense fallback={null}>
               <NavigationEvents />
-            </Suspense> */}
+            </Suspense>
             <Navbar/>
             <div className="pages">
               {children}
