@@ -16,7 +16,7 @@ const Navbar = () => {
           <h1>Workout Buddy</h1>
         </Link>
         <nav>
-          {email && (
+          {!email && (
             <div>
               <span>{email}</span>
               <button onClick={logoutHandle}>Log out</button>
