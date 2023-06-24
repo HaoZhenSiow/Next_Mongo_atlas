@@ -12,7 +12,7 @@ export default function Home() {
   const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
 
-  email && redirect(`${location.origin}/`)
+  email && redirect('/')
 
   // useEffect(() => {
   //   tracker()
