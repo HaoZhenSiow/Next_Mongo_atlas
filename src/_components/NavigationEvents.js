@@ -8,14 +8,14 @@ const NavigationEvents = () => {
   const pathname = usePathname()
 
   useEffect(() => {
-    // axios.get('/api/tracker/')
+    fetcher()
     console.log(pathname)
   }, [pathname]);
   return null
 }
 
-// async function fetcher() {
-//   await axios.get('http://localhost:3000/api/tracker/')
-// }
+async function fetcher() {
+  await axios.get('/api/tracker/')
+}
 
 export default NavigationEvents

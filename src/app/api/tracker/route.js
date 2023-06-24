@@ -8,15 +8,16 @@ client.setEndpoint('https://cloud.appwrite.io/v1')
       .setProject('6494a8fd4af3d9263a38')
 
 export async function GET(req) {
-  console.log('tracker working');
-  // try {
-  //   const response = await databases.createDocument('6494ab33bb6a1dedfc3d', '6494b12e78d1b617712c', ID.unique(), {
-  //     test: req.cookies.get('ip').value
-  //   })
-  //   return res(response, 200)
-  // } catch (error) {
-  //   return res(error, 400)
-  // }
+  const ip = req.headers.get('x-forwarded-for')
+  
+  try {
+    const response = await databases.createDocument('6494ab33bb6a1dedfc3d', '6494b12e78d1b617712c', ID.unique(), {
+      test: ip
+    })
+    return res(response, 200)
+  } catch (error) {
+    return res(error, 400)
+  }
   // setTimeout(() => {
   //   console.log('user inactive for 5s');
   // }, 5000)
