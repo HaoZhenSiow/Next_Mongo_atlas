@@ -1,6 +1,5 @@
 'use client'
-import { useEffect, useRef } from "react"
-import tracker from "@/_lib/tracker"
+import { useRef } from "react"
 import { redirect } from 'next/navigation'
 import axios from "axios"
 axios.defaults.validateStatus = false
@@ -13,10 +12,6 @@ export default function Home() {
   const { login } = AuthStore.useStoreActions(actions => actions)
 
   email && redirect('/')
-
-  // useEffect(() => {
-  //   tracker()
-  // })
  
   return (
     <form className="login" onSubmit={handleLogin}>

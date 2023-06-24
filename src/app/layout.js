@@ -1,8 +1,10 @@
 require('dotenv').config()
 import './globals.css'
+import { Suspense } from 'react'
 import ClientOnly from '@/_components/ClientOnly'
 import Store from '@/_stores/Store'
 import Navbar from '@/_components/Navbar'
+import NavigationEvents from '@/_components/NavigationEvents'
 
 
 export const metadata = {
@@ -19,6 +21,9 @@ export default async function RootLayout({ children }) {
       <body>
         {/* <ClientOnly> */}
           <Store>
+            {/* <Suspense fallback={null}>
+              <NavigationEvents />
+            </Suspense> */}
             <Navbar/>
             <div className="pages">
               {children}
