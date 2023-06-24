@@ -4,28 +4,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/login',
-        has: [
-          {
-            type: 'cookie',
-            key: 'token'
-          }
-        ],
-        destination: '/',
-        permanent: false
-      },
-      {
-        source: '/signup',
-        has: [
-          {
-            type: 'cookie',
-            key: 'token'
-          }
-        ],
-        destination: '/',
-        permanent: false
-      },
-      {
         source: '/',
         missing: [
           {
