@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from "react"
 import tracker from "@/_lib/tracker"
+import { redirect } from 'next/navigation'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -8,7 +9,10 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
+  const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
+
+  email && redirect(`${location.origin}/`)
 
   // useEffect(() => {
   //   tracker()
@@ -51,8 +55,7 @@ export default function Home() {
     const { status, data } = await axios.post('/api/auth/', payload)
     if (status === 200) {
       login(data)
-      form.reset()
-      location.replace(`${location.origin}/`)
+      
     } else {
       errRef.current.hidden = false
       errRef.current.innerHTML = data
