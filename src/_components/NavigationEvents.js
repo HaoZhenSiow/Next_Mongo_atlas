@@ -8,8 +8,8 @@ const NavigationEvents = () => {
   const pathname = usePathname()
 
   useEffect(() => {
-    fetcher(pathname)
-    console.log(pathname)
+    // fetcher(pathname)
+    // console.log(pathname)
   }, [pathname]);
   return null
 }

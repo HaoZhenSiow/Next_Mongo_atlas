@@ -19,8 +19,8 @@ export default async function RootLayout({ children }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       </head>
       <body>
-        {/* <ClientOnly> */}
-          <Store>
+        <Store>
+          <ClientOnly>
             <Suspense fallback={null}>
               <NavigationEvents />
             </Suspense>
@@ -28,8 +28,8 @@ export default async function RootLayout({ children }) {
             <div className="pages">
               {children}
             </div>
-          </Store>
-        {/* </ClientOnly> */}
+          </ClientOnly>
+        </Store>
       </body>
     </html>
   )
