@@ -17,8 +17,9 @@ export async function middleware(request) {
       break
     case Boolean(protectedApi.includes(pathname) && token):
       try {
-        await decodeToken(token.value)
+        const { id } = await decodeToken(token.value)
         response = NextResponse.next()
+        response.cookies.set('user', id)
       } catch (error) {
         response = NextResponse.json(`Request is not authorized`, { status: 401 })
       }
