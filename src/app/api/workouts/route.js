@@ -1,24 +1,19 @@
-import { connectDB, disconnectDB } from "@/_lib/connectDB"
+import connectDB from "@/_lib/connectDB"
 import workoutModel from '@/_models/workoutModel'
 import { res, revalidateIndex, isValidId } from '@/_lib/utils'
 
+connectDB()
+
 export async function POST(req) {
-  return await handleRequest(req, createWorkout)
+  return await createWorkout(req)
 }
 
 export async function GET(req) {
-  return await handleRequest(req, getWorkouts)
+  return await getWorkouts(req)
 }
 
 export async function DELETE(req) {
-  return await handleRequest(req, deleteWorkout)
-}
-
-async function handleRequest(req, callback) {
-  await connectDB()
-  const response = await callback(req)
-  await disconnectDB()
-  return response
+  return await deleteWorkout(req)
 }
 
 async function createWorkout(req) {

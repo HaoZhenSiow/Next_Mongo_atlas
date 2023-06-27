@@ -22,7 +22,7 @@ export default async function RootLayout({ children }) {
         <Store>
           <ClientOnly>
             <Suspense fallback={null}>
-              <NavigationEvents />
+              <NavigationEvents/>
             </Suspense>
             <Navbar/>
             <div className="pages">

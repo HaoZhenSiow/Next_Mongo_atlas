@@ -3,21 +3,22 @@
 import { useEffect } from "react"
 import { usePathname } from 'next/navigation'
 import axios from "axios"
+axios.defaults.validateStatus = false
 
 const NavigationEvents = () => {
   const pathname = usePathname()
 
   useEffect(() => {
-    fetcher(pathname)
-    // console.log(pathname)
+    async function fetcher() {
+      await axios.post('/api/tracker/', {
+        path: pathname
+      })
+      
+    }
+    fetcher()
   }, [pathname]);
+  
   return null
-}
-
-async function fetcher(pathname) {
-  await axios.post('/api/tracker/', {
-    path: pathname
-  })
 }
 
 export default NavigationEvents

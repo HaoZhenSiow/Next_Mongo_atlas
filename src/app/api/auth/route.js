@@ -1,28 +1,25 @@
-import { connectDB, disconnectDB } from "@/_lib/connectDB"
+import connectDB from "@/_lib/connectDB"
 import userModel from "@/_models/userModel";
 import bcrypt from "bcrypt"
 import { genToken } from "@/_lib/jwt";
 import { res } from "@/_lib/utils";
 
+connectDB()
+
 export async function POST(req) {
-  await connectDB()
-
   const { request = '', email = '', password = '' } = await req.json()
-  let response = res('Invalid request.', 400)
-
+  
   switch (request) {
     case "login":
-      response = await login(email, password)
-      break
+      return await login(email, password)
     case "signup":
-      response = await signup(email, password)
-      break
+      return await signup(email, password)
     case "logout":
-      response = await logout()
+      return await logout()
+    default:
+      return res('Invalid request.', 400)
   }
 
-  await disconnectDB()
-  return response
 }
 
 async function login(email, password) {
