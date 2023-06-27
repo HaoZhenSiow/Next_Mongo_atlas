@@ -1,6 +1,11 @@
-import { Schema, model, models } from 'mongoose'
+import mongoose, { Schema, model, models } from 'mongoose'
 
 const sessionSchema = new Schema({
+  uid: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+    unique: true
+  },
   path: {
     type: String,
     required: true

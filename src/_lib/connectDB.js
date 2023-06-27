@@ -1,10 +1,12 @@
 require('dotenv').config()
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-export const connectDB = async () => {
-  await mongoose.connect(process.env.MONGO_URI)
+const connectDB = async () => {
+  if (mongoose.connection.readyState !== 1) {
+    await mongoose.connect(process.env.MONGO_URI, {
+      heartbeatFrequencyMS: 10 * 1000
+    })
+  }
 }
 
-export const disconnectDB = async () => {
-  await mongoose.connection.close()
-}
+export default connectDB
