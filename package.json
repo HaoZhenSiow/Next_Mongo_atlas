@@ -12,6 +12,7 @@
     "appwrite": "^11.0.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
+    "bowser": "^2.11.0",
     "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
     "easy-peasy": "^6.0.0",
