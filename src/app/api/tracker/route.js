@@ -29,7 +29,7 @@ async function createSession(path, ip) {
       }]
     })
     
-    const response = res(session.ip, 200)
+    const response = res('created new session', 200)
     response.cookies.set('uid', session.uid)
     return response
   }
