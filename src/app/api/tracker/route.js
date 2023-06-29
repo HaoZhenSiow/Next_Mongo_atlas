@@ -2,18 +2,19 @@ import mongoose from "mongoose"
 import connectDB from "@/_lib/connectDB"
 import sessionModel from "@/_models/sessionModel"
 import { res } from "@/_lib/utils"
+import { genToken, decodeToken } from "@/_lib/jwt"
 
 connectDB()
 
 export async function POST(req) {
   const body = await req.json()
   const ip = req.headers.get('x-forwarded-for')
-  const uid = req.cookies.get('uid')
-
-  if (uid) {
-    return await continueSession(uid.value, body)
-  }
+  const uidToken = req.cookies.get('uidToken')
+  const { uid } = uidToken ? await decodeToken(uidToken.value) : { uid: null }
   
+  if (uid) {
+    return await continueSessionWithUID(uid, ip, body)
+  }
   return await createSession(ip, body)
 }
 
@@ -25,8 +26,9 @@ async function createSession(ip, body) {
       events: [body]
     })
     
+    const uidToken = await genToken({ uid: session.uid }, true)
     const response = res('created new session', 200)
-    response.cookies.set('uid', session.uid)
+    response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
     return response
   }
   
@@ -36,11 +38,8 @@ async function createSession(ip, body) {
   
 }
 
-async function continueSession(uid, body) {
+async function continueSession(session, body) {
   try {
-    const session = await sessionModel.findOne({ uid })
-    if (!session) throw new Error('Session not found')
-
     const prevEvent = session.events.at(-1),
           isPageEvent = prevEvent.event.startsWith('/'),
           isRefreshEvent = prevEvent.event === body.event
@@ -51,13 +50,25 @@ async function continueSession(uid, body) {
     session.events.push(body)
     await session.save()
 
+    const uidToken = await genToken({ uid: session.uid }, true)
     const response = res('added new event', 200)
-    response.cookies.set('uid', session.uid)
+    response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
     return response
   }
   
   catch (error) {
     return res(error, 400)
   }
+}
+
+async function continueSessionWithUID(uid, ip, body) {
+  try {
+    const session = await sessionModel.findOne({ uid })
+    if (!session) return await createSession(ip, body)
+    return await continueSession(session, body)
+  }
   
+  catch (error) {
+    return res(error, 400)
+  }
 }
