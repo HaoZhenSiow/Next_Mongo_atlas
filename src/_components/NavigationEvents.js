@@ -10,19 +10,48 @@ const NavigationEvents = () => {
   const pathname = usePathname()
 
   useEffect(() => {
-    // const browser = Bowser.getParser(window.navigator.userAgent)
-    // const browser2 = navigator.userAgentData.brands[2].brand
-    // console.log(browser.getBrowser(), browser2)
-    async function fetcher() {
-      await axios.post('/api/tracker/', {
-        path: pathname
-      })
-      
-    }
-    fetcher()
+    const userAgent = Bowser.getParser(window.navigator.userAgent),
+          browser = getBrowser(userAgent),
+          device = userAgent.getPlatform().type,
+          resolution = screen.width + ' x ' + screen.height,
+          payload = {
+            event: pathname,
+            device,
+            browser,
+            resolution
+          }
+
+    browser !== 'Electron' && trackPath(payload)
   }, [pathname]);
   
   return null
 }
 
 export default NavigationEvents
+
+async function trackPath(payload) {
+  await axios.post('/api/tracker/', payload)
+}
+
+function getBrowser(userAgent) {
+  const data = navigator.userAgentData
+  if (data && data.brands[3]) return 'DuckDuckGo'
+  if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
+  return userAgent.getBrowser().name
+}
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}

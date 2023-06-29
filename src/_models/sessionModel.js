@@ -8,6 +8,15 @@ const pathSchema = new Schema({
   duration: {
     type: Number,
     default: 0
+  },
+  device: {
+    type: String
+  },
+  browser: {
+    type: String
+  },
+  resolution: {
+    type: String
   }
 }, { timestamps: true })
 
@@ -20,7 +29,7 @@ const sessionSchema = new Schema({
     type: String,
     required: true
   },
-  path: {
+  events: {
     type: [pathSchema],
     required: true
   }
