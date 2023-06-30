@@ -10,12 +10,18 @@ export async function POST(req) {
   const body = await req.json()
   const ip = req.headers.get('x-forwarded-for')
   const uidToken = req.cookies.get('uidToken')
-  const { uid } = uidToken ? await decodeToken(uidToken.value) : { uid: null }
-  
-  if (uid) {
-    return await continueSessionWithUID(uid, ip, body)
+  const uid = await decodeCookie(uidToken)
+
+  try {
+    const session = uid ? await findSession({ uid }) : await findSession({ ip })
+    const lastEntry = new Date() - session.updatedAt
+    if (lastEntry > 30 * 60 * 1000 || !session) return await createSession(ip, body)
+    return await continueSession(session, body)
   }
-  return await createSession(ip, body)
+  
+  catch (error) {
+    return res(error, 400)
+  }
 }
 
 async function createSession(ip, body) {
@@ -61,14 +67,22 @@ async function continueSession(session, body) {
   }
 }
 
-async function continueSessionWithUID(uid, ip, body) {
+async function findSession(query) {
   try {
-    const session = await sessionModel.findOne({ uid })
-    if (!session) return await createSession(ip, body)
-    return await continueSession(session, body)
+    return await sessionModel.findOne(query).sort({ updatedAt: -1 })
   }
   
   catch (error) {
     return res(error, 400)
+  }
+}
+
+async function decodeCookie(uidToken) {
+  try {
+    const { uid } = uidToken ? await decodeToken(uidToken.value) : { uid: null }
+    return uid
+  }
+  catch {
+    return null
   }
 }
