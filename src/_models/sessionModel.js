@@ -29,6 +29,10 @@ const sessionSchema = new Schema({
     type: String,
     required: true
   },
+  newUser:{
+    type: Boolean,
+    required: true
+  },
   events: {
     type: [pathSchema],
     required: true
