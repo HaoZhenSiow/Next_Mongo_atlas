@@ -15,10 +15,10 @@ export async function POST(req) {
   try {
     let session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
-    if (!session) return await createSession(ip, body)
+    if (!session) return await createSession(ip, true, body)
 
     const isSessionExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
-    if (isSessionExpired) return await createSession(ip, body)
+    if (isSessionExpired) return await createSession(ip, false, body)
 
     return await continueSession(session, body)
   }
@@ -28,11 +28,12 @@ export async function POST(req) {
   }
 }
 
-async function createSession(ip, body) {
+async function createSession(ip, newUser, body) {
   try {
     const session = await sessionModel.create({
       uid: new mongoose.Types.ObjectId(),
       ip,
+      newUser,
       events: [
         {
           ...body,
