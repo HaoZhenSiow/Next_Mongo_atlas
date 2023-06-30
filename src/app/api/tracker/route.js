@@ -13,7 +13,8 @@ export async function POST(req) {
         uid = await decodeCookie(uidToken)
 
   try {
-    const session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
+    let session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
+    if (!session) { session = await findSession({ ip }) }
     if (!session) return await createSession(ip, body)
 
     const isSessionExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
