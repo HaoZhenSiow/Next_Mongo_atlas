@@ -7,17 +7,17 @@ import { genToken, decodeToken } from "@/_lib/jwt"
 connectDB()
 
 export async function POST(req) {
-  const body = await req.json()
-  const ip = req.headers.get('x-forwarded-for')
-  const uidToken = req.cookies.get('uidToken')
-  const uid = await decodeCookie(uidToken)
+  const body = await req.json(),
+        ip = req.headers.get('x-forwarded-for'),
+        uidToken = req.cookies.get('uidToken'),
+        uid = await decodeCookie(uidToken)
 
   try {
     const session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
     if (!session) return await createSession(ip, body)
 
-    const lastEntry = new Date() - session.updatedAt
-    if (lastEntry > 30 * 60 * 1000) return await createSession(ip, body)
+    const isSessionExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
+    if (isSessionExpired) return await createSession(ip, body)
 
     return await continueSession(session, body)
   }
@@ -32,13 +32,16 @@ async function createSession(ip, body) {
     const session = await sessionModel.create({
       uid: new mongoose.Types.ObjectId(),
       ip,
-      events: [body]
+      events: [
+        {
+          ...body,
+          event: `${body.device}`
+        },
+        body
+      ]
     })
-    
-    const uidToken = await genToken({ uid: session.uid }, true)
-    const response = res('created new session', 200)
-    response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
-    return response
+
+    return await returnUIDtoken(session.uid, 'created new event')
   }
   
   catch (error) {
@@ -60,11 +63,9 @@ async function continueSession(session, body) {
       })
       await session.save()
 
-      const uidToken = await genToken({ uid: session.uid }, true)
-      const response = res('added new event', 200)
-      response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
-      return response
+      return await returnUIDtoken(session.uid, 'added new event')
     }
+
     if (isPageEvent && isRefreshEvent) return res('refresh page', 200)
     
     const prevEventDuration = new Date() - prevEvent.createdAt
@@ -81,10 +82,7 @@ async function continueSession(session, body) {
     session.events.push(body)
     await session.save()
 
-    const uidToken = await genToken({ uid: session.uid }, true)
-    const response = res('added new event', 200)
-    response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
-    return response
+    return await returnUIDtoken(session.uid, 'added new event')
   }
   
   catch (error) {
@@ -110,4 +108,11 @@ async function decodeCookie(uidToken) {
   catch {
     return null
   }
+}
+
+async function returnUIDtoken(uid, message) {
+  const uidToken = await genToken({ uid }, true)
+  const response = res(message, 200)
+  response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
+  return response
 }
