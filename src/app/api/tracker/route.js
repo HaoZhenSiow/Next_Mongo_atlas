@@ -13,9 +13,12 @@ export async function POST(req) {
   const uid = await decodeCookie(uidToken)
 
   try {
-    const session = uid ? await findSession({ uid }) : await findSession({ ip })
+    const session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
+    if (!session) return await createSession(ip, body)
+
     const lastEntry = new Date() - session.updatedAt
-    if (lastEntry > 30 * 60 * 1000 || !session) return await createSession(ip, body)
+    if (lastEntry > 30 * 60 * 1000) return await createSession(ip, body)
+
     return await continueSession(session, body)
   }
   
@@ -73,7 +76,7 @@ async function findSession(query) {
   }
   
   catch (error) {
-    return res(error, 400)
+    return null
   }
 }
 
