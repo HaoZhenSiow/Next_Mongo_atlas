@@ -51,11 +51,33 @@ async function continueSession(session, body) {
   try {
     const prevEvent = session.events.at(-1),
           isPageEvent = prevEvent.event.startsWith('/'),
-          isRefreshEvent = prevEvent.event === body.event
+          isRefreshEvent = prevEvent.event === body.event,
+          isNotSameDevice = prevEvent.device !== body.device
+    if (isPageEvent && isRefreshEvent && isNotSameDevice) {
+      session.events.push({
+        ...body,
+        event: `${body.event}`
+      })
+      await session.save()
+
+      const uidToken = await genToken({ uid: session.uid }, true)
+      const response = res('added new event', 200)
+      response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
+      return response
+    }
     if (isPageEvent && isRefreshEvent) return res('refresh page', 200)
     
     const prevEventDuration = new Date() - prevEvent.createdAt
     prevEvent.duration = prevEventDuration
+
+    if (isNotSameDevice) {
+      prevEvent.duration = 0
+      session.events.push({
+        ...body,
+        event: `${body.event}`
+      })
+    }
+
     session.events.push(body)
     await session.save()
 
