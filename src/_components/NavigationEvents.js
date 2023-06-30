@@ -12,16 +12,14 @@ const NavigationEvents = () => {
   useEffect(() => {
     const userAgent = Bowser.getParser(window.navigator.userAgent),
           browser = getBrowser(userAgent),
-          device = userAgent.getPlatform().type,
-          resolution = screen.width + ' x ' + screen.height,
           payload = {
             event: pathname,
-            device,
+            device: userAgent.getPlatform().type,
             browser,
-            resolution
+            resolution: screen.width + ' x ' + screen.height
           }
 
-    browser !== 'Electron' && trackPath(payload)
+    // browser !== 'Electron' && trackPath(payload)
   }, [pathname]);
   
   return null
