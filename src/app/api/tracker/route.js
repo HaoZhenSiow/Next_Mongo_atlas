@@ -56,9 +56,8 @@ async function continueSession(session, ip, body) {
     const prevEvent = session.events.at(-1),
           isPageEvent = prevEvent.event.startsWith('/'),
           isRefreshEvent = prevEvent.event === body.event,
-          isNotSameDevice = prevEvent.device !== body.device
+          isNotSameDevice = prevEvent.device !== body.device,
           isVPNuser = session.ip !== ip
-
     if (isVPNuser) {
       session.ip = 'VPN'
     }
