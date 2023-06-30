@@ -20,7 +20,7 @@ export async function POST(req) {
     const isSessionExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
     if (isSessionExpired) return await createSession(ip, body)
 
-    return await continueSession(session, body)
+    return await continueSession(session, ip, body)
   }
   
   catch (error) {
@@ -51,12 +51,18 @@ async function createSession(ip, body) {
   
 }
 
-async function continueSession(session, body) {
+async function continueSession(session, ip, body) {
   try {
     const prevEvent = session.events.at(-1),
           isPageEvent = prevEvent.event.startsWith('/'),
           isRefreshEvent = prevEvent.event === body.event,
           isNotSameDevice = prevEvent.device !== body.device
+          isVPNuser = session.ip !== ip
+
+    if (isVPNuser) {
+      session.ip = 'VPN'
+    }
+
     if (isPageEvent && isRefreshEvent && isNotSameDevice) {
       session.events.push({
         ...body,
