@@ -56,7 +56,7 @@ async function continueSession(session, body) {
     if (isPageEvent && isRefreshEvent && isNotSameDevice) {
       session.events.push({
         ...body,
-        event: `${body.event}`
+        event: `${body.device}`
       })
       await session.save()
 
@@ -74,7 +74,7 @@ async function continueSession(session, body) {
       prevEvent.duration = 0
       session.events.push({
         ...body,
-        event: `${body.event}`
+        event: `${body.device}`
       })
     }
 
