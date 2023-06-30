@@ -18,8 +18,8 @@ const NavigationEvents = () => {
             browser,
             resolution: screen.width + ' x ' + screen.height
           }
-
-    // browser !== 'Electron' && trackPath(payload)
+          
+    browser !== 'Electron' && trackPath(payload)
   }, [pathname]);
   
   return null
