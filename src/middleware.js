@@ -3,34 +3,16 @@ import { decodeToken } from "./_lib/jwt"
 
 export async function middleware(request) {
   const protectedApi = ['/api/workouts'],
-        protectedPages = ['/']
-
-  const token = request.cookies.get('token') ? request.cookies.get('token') : null
-  const { origin, pathname } = request.nextUrl
+        protectedPages = ['/'],
+        { pathname } = request.nextUrl,
+        token = request.cookies.get('token') ? request.cookies.get('token') : null
 
   switch (true) {
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })
       
-    case Boolean((protectedApi.includes(pathname) || protectedPages.includes(pathname)) && token):
-      try {
-        const { id } = await decodeToken(token.value)
-        const response = NextResponse.next()
-        response.cookies.set('user', id)
-        return response
-      }
-      catch (error) {
-        if (protectedApi.includes(pathname)) {
-          return NextResponse.json(`Request is not authorized`, { status: 401 })
-        }
-        const response = NextResponse.redirect(new URL('/login', origin))
-        response.cookies.delete('token')
-                        .delete('user')
-        return response
-      }
-
-    case Boolean(protectedPages.includes(pathname) && !token):
-      return NextResponse.redirect(new URL('/login', origin))
+    case Boolean(token):
+      return await verifyToken(token, NextResponse, protectedPages, pathname) 
 
     default:
       return NextResponse.next()
@@ -40,4 +22,21 @@ export async function middleware(request) {
 
 export const config = {
   matcher: ['/', '/api/workouts']
+}
+
+async function verifyToken(token, NextResponse, protectedPages, pathname) {
+  try {
+    const { id } = await decodeToken(token.value)
+    const response = NextResponse.next()
+    response.cookies.set('user', id)
+    return response
+  }
+  catch (error) {
+    const response = protectedPages.includes(pathname)?
+                     NextResponse.next():
+                     NextResponse.json(`Request is not authorized`, { status: 401 })
+    response.cookies.delete('token')
+                    .delete('user')
+    return response
+  }
 }

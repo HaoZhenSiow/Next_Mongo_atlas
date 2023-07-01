@@ -63,12 +63,12 @@ const WorkoutForm = () => {
     const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts)
 
     switch (status) {
-      case 200:
+      case 201:
         insertWorkout(data)
         form.reset()
         break
       case 401:
-        alert('You token is unauthorized, please log in again')
+        alert('You token are unauthorized, please log in again')
         logout()
         break
     }

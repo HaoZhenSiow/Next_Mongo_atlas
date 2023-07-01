@@ -10,9 +10,12 @@ axios.defaults.validateStatus = false
 
 const NavigationEvents = () => {
   const pathname = usePathname()
-  const token = getCookie('token')
+  const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
-  !token && logout()
+  const token = getCookie('token')
+  if (!token && email) {
+    logout()
+  }
 
   useEffect(() => {
     const userAgent = Bowser.getParser(window.navigator.userAgent),
