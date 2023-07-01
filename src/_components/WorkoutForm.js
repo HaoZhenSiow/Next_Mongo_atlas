@@ -3,11 +3,13 @@ import { useRef } from "react"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
+import AuthStore from '@/_stores/authStore'
 import WorkoutStore from "@/_stores/workoutStore"
 
 const WorkoutForm = () => {
   const errRef = useRef()
   const { insertWorkout } = WorkoutStore.useStoreActions(actions => actions)
+  const { logout } = AuthStore.useStoreActions(actions => actions)
 
   return (
     <form className="create" onSubmit={handleSubmit}> 
@@ -60,10 +62,17 @@ const WorkoutForm = () => {
 
     const { status, data } = await axios.post(process.env.NEXT_PUBLIC_WORKOUT_API, workouts)
 
-    if (status === 201) {
-      insertWorkout(data)
-      form.reset()
+    switch (status) {
+      case 200:
+        insertWorkout(data)
+        form.reset()
+        break
+      case 401:
+        alert('You token is unauthorized, please log in again')
+        logout()
+        break
     }
+
     button.disabled = false
   }
 
