@@ -30,7 +30,7 @@ async function login(email, password) {
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) return res('Password is incorrect.', 400)
 
-    return loginSuccess(user, email)
+    return await loginSuccess(user, email)
   }
 
   catch (error) {
