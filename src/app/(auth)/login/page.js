@@ -9,10 +9,12 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
+  const token = getCookie('token') ? getCookie('token') : null
+  console.log(token)
   const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
 
-  email && redirect('/')
+  if (token && email) {redirect('/')}
  
   return (
     <form className="login" onSubmit={handleLogin}>
@@ -50,8 +52,7 @@ export default function Home() {
 
     const { status, data } = await axios.post('/api/auth/', payload)
     if (status === 200) {
-      const token = getCookie('token')
-      token && login(data)
+      login(data)
       
     } else {
       errRef.current.hidden = false
