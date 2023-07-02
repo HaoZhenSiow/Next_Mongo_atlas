@@ -9,12 +9,10 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
-  const token = getCookie('token') ? getCookie('token') : null
-  console.log(token)
   const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
 
-  if (token && email) {redirect('/')}
+  email && redirect('/')
  
   return (
     <form className="login" onSubmit={handleLogin}>

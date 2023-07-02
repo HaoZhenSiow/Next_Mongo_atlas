@@ -3,14 +3,15 @@ import { useEffect } from "react"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-import AuthStore from '@/_stores/authStore'
 import WorkoutDetails from "@/_components/WorkoutDetails"
 
+import AuthStore from '@/_stores/authStore'
 import WorkoutStore from "@/_stores/workoutStore"
 
-export default function WorkoutList(props) {
+export default function WorkoutList() {
   const { workouts } = WorkoutStore.useStoreState(state => state)
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
+  const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
   useEffect(() => {
@@ -23,11 +24,10 @@ export default function WorkoutList(props) {
         case 401:
           alert('You token is unauthorized, please log in again')
           logout()
-          break
       }
     }
-    fetchWorkouts()
-  }, [loadWorkouts])
+    email && fetchWorkouts()
+  }, [loadWorkouts, email])
 
   return (
     <div className="workouts">
