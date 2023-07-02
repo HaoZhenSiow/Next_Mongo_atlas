@@ -1,6 +1,7 @@
 'use client'
 import { useRef } from "react"
 import { redirect } from 'next/navigation'
+import { getCookie } from "@/_lib/utils"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -49,7 +50,8 @@ export default function Home() {
 
     const { status, data } = await axios.post('/api/auth/', payload)
     if (status === 200) {
-      login(data)
+      const token = getCookie('token')
+      token && login(data)
       
     } else {
       errRef.current.hidden = false
