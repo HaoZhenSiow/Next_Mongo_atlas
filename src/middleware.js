@@ -4,9 +4,9 @@ import { decodeToken } from "./_lib/jwt"
 export async function middleware(request) {
   const protectedApi = ['/api/workouts'],
         protectedPages = ['/'],
-        { pathname } = request.nextUrl,
-        token = request.cookies.get('token') ? request.cookies.get('token') : null
-
+        token = request.cookies.get('token'),
+        { pathname } = request.nextUrl
+        
   switch (true) {
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })
