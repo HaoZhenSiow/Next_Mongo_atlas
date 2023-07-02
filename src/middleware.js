@@ -11,22 +11,8 @@ export async function middleware(request) {
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })
       
-    case Boolean(token):
+    // case Boolean(token):
     //   return await verifyToken(token, NextResponse, protectedPages, pathname) 
-      try {
-        const { id } = await decodeToken(token.value)
-        const response = NextResponse.next()
-        response.cookies.set('user', id)
-        return response
-      }
-      catch (error) {
-        const response = protectedPages.includes(pathname)?
-                        NextResponse.next():
-                        NextResponse.json(`Request is not authorized`, { status: 401 })
-        response.cookies.delete('token')
-                        .delete('user')
-        return response
-      }
 
     default:
       return NextResponse.next()

@@ -6,6 +6,7 @@ import WorkoutDetails from "@/_components/WorkoutDetails"
 
 import AuthStore from '@/_stores/authStore'
 import WorkoutStore from "@/_stores/workoutStore"
+import { useEffect } from "react"
 
 export default function WorkoutList() {
   const { workouts } = WorkoutStore.useStoreState(state => state)
@@ -13,7 +14,10 @@ export default function WorkoutList() {
   const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
-  fetchWorkouts()
+  useEffect (() => {
+    fetchWorkouts()
+  }, [loadWorkouts])
+  
 
   return (
     <div className="workouts">
