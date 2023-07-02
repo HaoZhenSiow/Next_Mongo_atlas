@@ -1,5 +1,4 @@
 'use client'
-import { useEffect } from "react"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -14,7 +13,7 @@ export default function WorkoutList() {
   const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
-  email && fetchWorkouts()
+  fetchWorkouts()
 
   return (
     <div className="workouts">
@@ -26,13 +25,6 @@ export default function WorkoutList() {
 
   async function fetchWorkouts() {
     const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
-    switch (status) {
-      case 200:
-        loadWorkouts(data)
-        break
-      case 401:
-        alert('You token is unauthorized, please log in again')
-        logout()
-    }
+    status === 200 && loadWorkouts(data)
   }
 }

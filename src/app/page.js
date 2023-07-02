@@ -13,7 +13,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <WorkoutList/>
+      {email && <WorkoutList />}
       <WorkoutForm/>
     </div> 
   )
