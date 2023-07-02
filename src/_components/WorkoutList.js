@@ -11,22 +11,10 @@ import WorkoutStore from "@/_stores/workoutStore"
 export default function WorkoutList() {
   const { workouts } = WorkoutStore.useStoreState(state => state)
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
+  const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
-  useEffect(() => {
-    async function fetchWorkouts() {
-      const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
-      switch (status) {
-        case 200:
-          loadWorkouts(data)
-          break
-        case 401:
-          alert('You token is unauthorized, please log in again')
-          logout()
-      }
-    }
-    // fetchWorkouts()
-  }, [loadWorkouts])
+  email && fetchWorkouts()
 
   return (
     <div className="workouts">
@@ -35,6 +23,16 @@ export default function WorkoutList() {
       ))}
     </div>
   )
-    
-  
+
+  async function fetchWorkouts() {
+    const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
+    switch (status) {
+      case 200:
+        loadWorkouts(data)
+        break
+      case 401:
+        alert('You token is unauthorized, please log in again')
+        logout()
+    }
+  }
 }
