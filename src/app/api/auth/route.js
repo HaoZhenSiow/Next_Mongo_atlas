@@ -66,7 +66,7 @@ async function logout() {
 
 async function loginSuccess(user, email) {
   const token = await genToken({ id: user._id }),
-        response = res({ email, token }, 200)
+        response = res({ email, token, id: user.id }, 200)
 
   response.cookies.set('token', token)
                   .set('user', user._id)
