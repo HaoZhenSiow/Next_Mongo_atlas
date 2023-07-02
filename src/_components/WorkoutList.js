@@ -11,7 +11,6 @@ import WorkoutStore from "@/_stores/workoutStore"
 export default function WorkoutList() {
   const { workouts } = WorkoutStore.useStoreState(state => state)
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
-  const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
   useEffect(() => {
@@ -26,8 +25,8 @@ export default function WorkoutList() {
           logout()
       }
     }
-    email && fetchWorkouts()
-  }, [loadWorkouts, email])
+    // fetchWorkouts()
+  }, [loadWorkouts])
 
   return (
     <div className="workouts">
