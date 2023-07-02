@@ -13,7 +13,7 @@ export default function WorkoutList() {
   const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
-  // fetchWorkouts()
+  fetchWorkouts()
 
   return (
     <div className="workouts">

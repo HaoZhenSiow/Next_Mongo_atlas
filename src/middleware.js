@@ -11,8 +11,8 @@ export async function middleware(request) {
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })
       
-    case Boolean(token):
-      return await verifyToken(token, NextResponse, protectedPages, pathname) 
+    // case Boolean(token):
+    //   return await verifyToken(token, NextResponse, protectedPages, pathname) 
 
     default:
       return NextResponse.next()
