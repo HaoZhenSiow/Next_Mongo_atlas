@@ -1,5 +1,6 @@
 'use client'
 import { useRef } from "react"
+import { trackInsertWorkout } from "@/_hooks/useEventTracker"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -64,6 +65,7 @@ const WorkoutForm = () => {
 
     switch (status) {
       case 201:
+        trackInsertWorkout()
         insertWorkout(data)
         form.reset()
         break

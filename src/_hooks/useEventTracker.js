@@ -4,24 +4,24 @@ import axios from "axios"
 axios.defaults.validateStatus = false
 
 const useEventTracker = (pathname) => {
-  useEffect(() => {
-    const userAgent = Bowser.getParser(window.navigator.userAgent),
-          browser = getBrowser(userAgent),
-          payload = {
-            event: pathname,
-            device: userAgent.getPlatform().type,
-            browser,
-            resolution: screen.width + ' x ' + screen.height
-          }
-          
-    browser !== 'Electron' && recordEvent(payload)
+  useEffect(() => {       
+    recordEvent(pathname)
   }, [pathname]);
 }
 
 export default useEventTracker
 
-async function recordEvent(payload) {
-  await axios.post('/api/tracker/', payload)
+export async function recordEvent(event) {
+  const userAgent = Bowser.getParser(window.navigator.userAgent),
+        browser = getBrowser(userAgent),
+        payload = {
+          event,
+          device: userAgent.getPlatform().type,
+          browser,
+          resolution: screen.width + ' x ' + screen.height
+        }
+
+  browser !== 'Electron' && await axios.post('/api/tracker/', payload)
 }
 
 export function getBrowser(userAgent) {
@@ -29,4 +29,12 @@ export function getBrowser(userAgent) {
   if (data && data.brands[3]) return 'DuckDuckGo'
   if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
   return userAgent.getBrowser().name
+}
+
+export function trackRemoveWorkout() {
+  recordEvent('remove workout')
+}
+
+export function trackInsertWorkout() {
+  recordEvent('insert workout')
 }
