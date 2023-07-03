@@ -13,7 +13,7 @@ export async function POST(req) {
         uid = await decodeCookie(uidToken)
 
   try {
-    let session = uid ? await sessionModel.findOne({ uid }) : await findSession({ ip })
+    let session = uid ? await findSession({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
     if (!session) return await createSession(ip, true, body)
 
@@ -59,6 +59,7 @@ async function continueSession(session, body) {
           isRefreshEvent = prevEvent.event === body.event,
           isNotSameDevice = prevEvent.device !== body.device
 
+    // when user switch device and same page
     if (isPageEvent && isRefreshEvent && isNotSameDevice) {
       session.events.push({
         ...body,
@@ -69,6 +70,7 @@ async function continueSession(session, body) {
       return await returnUIDtoken(session.uid, 'added new event')
     }
 
+    // do nothing when user refresh page
     if (isPageEvent && isRefreshEvent) return res('refresh page', 200)
     
     const prevEventDuration = new Date() - prevEvent.createdAt

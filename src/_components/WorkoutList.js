@@ -11,7 +11,6 @@ import { useEffect } from "react"
 export default function WorkoutList() {
   const { workouts } = WorkoutStore.useStoreState(state => state)
   const { loadWorkouts } = WorkoutStore.useStoreActions(actions => actions)
-  const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
 
   useEffect (() => {
@@ -29,6 +28,14 @@ export default function WorkoutList() {
 
   async function fetchWorkouts() {
     const { status, data } = await axios.get(process.env.NEXT_PUBLIC_WORKOUT_API)
+    switch (status) {
+      case 200:
+        loadWorkouts(data)
+        break
+      case 401:
+        alert('You token are unauthorized, please log in again')
+        logout()
+    }
     status === 200 && loadWorkouts(data)
   }
 }

@@ -50,8 +50,7 @@ export default function Home() {
 
     const { status, data } = await axios.post('/api/auth/', payload)
     if (status === 200) {
-      const token = getCookie('token')
-      token && login(data)
+      login(data)
       
     } else {
       errRef.current.hidden = false
