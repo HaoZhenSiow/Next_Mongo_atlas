@@ -1,6 +1,5 @@
 'use client'
 import { useRef } from "react"
-import { redirect } from 'next/navigation'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -8,10 +7,7 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
-  const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
-
-  email && redirect('/')
 
   return (
     <form className="signup" onSubmit={handleSignup}>

@@ -1,7 +1,5 @@
 'use client'
 import { useRef } from "react"
-import { redirect } from 'next/navigation'
-import { getCookie } from "@/_lib/utils"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -9,10 +7,7 @@ import AuthStore from "@/_stores/authStore"
 
 export default function Home() {
   const errRef = useRef()
-  const { email } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
-
-  email && redirect('/')
  
   return (
     <form className="login" onSubmit={handleLogin}>
@@ -51,7 +46,6 @@ export default function Home() {
     const { status, data } = await axios.post('/api/auth/', payload)
     if (status === 200) {
       login(data)
-      
     } else {
       errRef.current.hidden = false
       errRef.current.innerHTML = data
