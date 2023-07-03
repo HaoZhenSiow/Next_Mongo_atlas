@@ -1,5 +1,6 @@
 'use client'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
+import { trackRemoveWorkout } from '@/_hooks/useEventTracker'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -28,6 +29,7 @@ const WorkoutDetails = ({ workout }) => {
     })
     switch (status) {
       case 200:
+        trackRemoveWorkout()
         removeWorkout(data)
         break
       case 401:
