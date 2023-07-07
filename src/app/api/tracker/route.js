@@ -7,7 +7,7 @@ import { genToken, decodeToken } from "@/_lib/jwt"
 connectDB()
 
 export async function POST(req) {
-  const body = await req.json(),
+  const { referrer, ...body } = await req.json(),
         ip = req.headers.get('x-forwarded-for'),
         uidToken = req.cookies.get('uidToken'),
         uid = await decodeCookie(uidToken)
@@ -15,10 +15,10 @@ export async function POST(req) {
   try {
     let session = uid ? await findSession({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
-    if (!session) return await createSession(ip, true, body)
+    if (!session) return await createSession({ ip, newUser: true, referrer }, body)
 
     const isSessionExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
-    if (isSessionExpired) return await createSession(ip, false, body)
+    if (isSessionExpired) return await createSession({ ip, newUser: false, referrer }, body)
 
     return await continueSession(session, body)
   }
@@ -28,12 +28,11 @@ export async function POST(req) {
   }
 }
 
-async function createSession(ip, newUser, body) {
+async function createSession(details, body) {
   try {
     const session = await sessionModel.create({
       uid: new mongoose.Types.ObjectId(),
-      ip,
-      newUser,
+      ...details,
       events: [
         {
           ...body,

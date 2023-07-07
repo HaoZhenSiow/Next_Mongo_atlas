@@ -4,7 +4,7 @@ import axios from "axios"
 axios.defaults.validateStatus = false
 
 const useEventTracker = (pathname) => {
-  useEffect(() => {       
+  useEffect(() => {
     recordEvent(pathname)
   }, [pathname]);
 }
@@ -14,7 +14,9 @@ export default useEventTracker
 export async function recordEvent(event) {
   const userAgent = Bowser.getParser(window.navigator.userAgent),
         browser = getBrowser(userAgent),
+        referrer = document.referrer ? new URL(document.referrer).hostname : 'direct',
         payload = {
+          referrer,
           event,
           device: userAgent.getPlatform().type,
           browser,
