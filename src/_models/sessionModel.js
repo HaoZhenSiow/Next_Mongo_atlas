@@ -33,6 +33,10 @@ const sessionSchema = new Schema({
     type: Boolean,
     required: true
   },
+  referrer: {
+    type: String,
+    required: true
+  },
   events: {
     type: [pathSchema],
     required: true
