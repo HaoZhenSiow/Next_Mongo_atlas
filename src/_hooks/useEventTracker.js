@@ -14,7 +14,7 @@ export default useEventTracker
 export async function recordEvent(event) {
   const userAgent = Bowser.getParser(window.navigator.userAgent),
         browser = getBrowser(userAgent),
-        referrer = document.referrer ? new URL(document.referrer).hostname : 'direct',
+        referrer = document.referrer ? new URL(document.referrer).origin : 'direct',
         payload = {
           referrer,
           event,
