@@ -28,6 +28,7 @@ export async function recordEvent(event) {
 
 export function getBrowser(userAgent) {
   const data = navigator.userAgentData
+  if (!navigator.geolocation) return 'Tor Browser'
   if (data && data.brands[3]) return 'DuckDuckGo'
   if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
   return userAgent.getBrowser().name
