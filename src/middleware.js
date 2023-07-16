@@ -28,7 +28,7 @@ async function verifyToken(token, NextResponse, protectedPages, pathname) {
   try {
     const { id } = await decodeToken(token.value)
     const response = NextResponse.next()
-    response.cookies.set('user', id)
+    response.cookies.set('user', id, { sameSite: 'strict' })
     return response
   }
   catch (error) {

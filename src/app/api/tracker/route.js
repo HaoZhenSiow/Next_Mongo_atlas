@@ -117,6 +117,6 @@ async function decodeCookie(uidToken) {
 async function returnUIDtoken(uid, message) {
   const uidToken = await genToken({ uid }, true)
   const response = res(message, 200)
-  response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60 })
+  response.cookies.set('uidToken', uidToken, { maxAge: 10 * 365 * 24 * 60 * 60, sameSite: 'strict' })
   return response
 }
