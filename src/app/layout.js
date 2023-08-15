@@ -1,10 +1,8 @@
 require('dotenv').config()
-import './globals.css'
-import { Suspense } from 'react'
-import ClientOnly from '@/_components/ClientOnly'
+
+import ClientOnly from '@/_lib/ClientOnly'
+import StyledComponentsRegistry from '@/_lib/registry'
 import Store from '@/_stores/Store'
-import Navbar from '@/_components/Navbar'
-import NavigationEvents from '@/_components/NavigationEvents'
 
 
 export const metadata = {
@@ -20,17 +18,14 @@ export default async function RootLayout({ children }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
       </head>
       <body>
-        <Store>
+       
           <ClientOnly>
-            <Suspense fallback={null}>
-              <NavigationEvents/>
-            </Suspense>
-            <Navbar/>
-            <div className="pages">
+            {/* <InitStyle/> */}
+            <StyledComponentsRegistry>
               {children}
-            </div>
+            </StyledComponentsRegistry>
           </ClientOnly>
-        </Store>
+        
       </body>
     </html>
   )
