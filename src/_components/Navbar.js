@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { eraseCookie } from '@/_lib/utils'
 import axios from 'axios'
 axios.defaults.validateStatus = false
 
@@ -35,7 +36,8 @@ const Navbar = () => {
 
   async function logoutHandle() {
     logout()
-    await axios.post('/api/auth/', { request: 'logout' })
+    eraseCookie('token')
+    eraseCookie('user')
   }
 }
 

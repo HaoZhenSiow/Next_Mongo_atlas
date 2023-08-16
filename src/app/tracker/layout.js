@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import InitStyle from './InitStyle'
 import Store from './_store/Store'
-import Navbar from '@/app/(tracker)/tracker/_components/tracker/Navbar'
+import Navbar from './_components/Navbar'
 
 
 export const metadata = {
