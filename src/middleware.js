@@ -6,6 +6,9 @@ export async function middleware(request) {
         protectedPages = ['/'],
         token = request.cookies.get('token'),
         { pathname } = request.nextUrl
+
+  // const protectedAdminPages = ['/admin'],
+  //       adminToken = request.cookies.get('adminToken'),
         
   switch (true) {
     case Boolean(protectedApi.includes(pathname) && !token):
