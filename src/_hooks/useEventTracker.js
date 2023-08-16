@@ -11,7 +11,7 @@ const useEventTracker = (pathname) => {
 
 export default useEventTracker
 
-export async function recordEvent(event) {
+export function recordEvent(event) {
   const userAgent = Bowser.getParser(window.navigator.userAgent),
         browser = getBrowser(userAgent),
         referrer = document.referrer ? new URL(document.referrer).hostname : 'direct',
@@ -23,7 +23,7 @@ export async function recordEvent(event) {
           resolution: screen.width + ' x ' + screen.height
         }
 
-  browser !== 'Electron' && await axios.post('/api/tracker/', payload)
+  browser !== 'Electron' && axios.post('/api/tracker/', payload)
 }
 
 export function getBrowser(userAgent) {
