@@ -1,12 +1,21 @@
 'use client'
+import { useRef } from "react"
 import styled from 'styled-components'
+import axios from "axios"
+axios.defaults.validateStatus = false
+
+import AuthStore from "../_store/authStore"
 
 const Main = createMain()
 
 export default function Home() {
+  const errRef = useRef()
+  const { login } = AuthStore.useStoreActions(actions => actions)
+  const handleLogin = createLoginHandle(login, errRef)
+
   return (
     <Main>
-      <form action="">
+      <form onSubmit={handleLogin}>
         <h3>Log In</h3>
         
         <label>Username:</label>
@@ -23,7 +32,7 @@ export default function Home() {
         />
 
         <button name="submit">Log in</button>
-        {/* <div className="error" ref={errRef} hidden></div> */}
+        <div className="error" ref={errRef} hidden></div>
       </form>
       
     </Main> 
@@ -44,9 +53,7 @@ function createMain() {
       display: flex;
       flex-direction: column;
       align-items: start;
-      /* gap: 1em; */
       h3 {
-        /* align-self: center; */
         margin-bottom: 1em;
       }
 
@@ -73,6 +80,35 @@ function createMain() {
         border: 1px solid #ccc;
         border-radius: 5px;
       }
+
+      .error {
+        color: red;
+        margin-top: 1em;
+      }
     }
   `
+}
+
+function createLoginHandle(login, errRef) {
+  return async function handleLogin(e) {
+    e.preventDefault()
+  
+    const form = e.target,
+          username = form.username,
+          password = form.password,
+          button = form.submit,
+          payload = { request: 'login', username: username.value, password: password.value }
+  
+    button.disabled = true
+    errRef.current.hidden = true
+  
+    const { status, data } = await axios.post('/tracker/api/auth', payload)
+    if (status === 200) {
+      login(data)
+    } else {
+      errRef.current.hidden = false
+      errRef.current.innerHTML = data
+    }
+    button.disabled = false
+  }
 }

@@ -14,8 +14,6 @@ export async function POST(req) {
       return await login(email, password)
     case "signup":
       return await signup(email, password)
-    case "logout":
-      return await logout()
     default:
       return res('Invalid request.', 400)
   }
@@ -53,15 +51,6 @@ async function signup(email, password) {
   catch (error) {
     return res('Something went wrong, please try again.', 500)
   }
-}
-
-async function logout() {
-  const response = res('logout success', 200)
-
-  response.cookies.delete('token')
-                  .delete('user')
-
-  return response
 }
 
 async function loginSuccess(user, email) {
