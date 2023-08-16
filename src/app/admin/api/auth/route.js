@@ -1,10 +1,11 @@
-import connectDB from "../../_lib/connectDB"
-import adminModel from "../../_modals/adminModel"
+import createTrackerConnection from "../../_mongoDB/trackerConnection";
 import bcrypt from "bcrypt"
 import { genToken } from "../../_lib/utils";
 import { res } from "../../_lib/utils";
 
-connectDB()
+const conn = createTrackerConnection(),
+      adminModel = conn.model('admin')
+
 
 export async function POST(req) {
   const { request = '', username = '', password = '' } = await req.json()
@@ -34,6 +35,10 @@ async function login(username, password) {
   catch (error) {
     return res('Something went wrong, please try again.', 400)
   }
+
+  finally {
+    conn.close()
+  }
 }
 
 async function signup(username, password) {
@@ -50,6 +55,10 @@ async function signup(username, password) {
   
   catch (error) {
     return res('Something went wrong, please try again.', 500)
+  }
+
+  finally {
+    conn.close()
   }
 }
 

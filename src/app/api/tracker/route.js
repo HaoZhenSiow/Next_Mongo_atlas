@@ -1,16 +1,18 @@
 import mongoose from "mongoose"
-import connectDB from "@/_lib/connectDB"
-import sessionModel from "@/_models/sessionModel"
+import createTrackerConnection from "@/app/admin/_mongoDB/trackerConnection"
 import { res } from "@/_lib/utils"
 import { genToken, decodeToken } from "@/_lib/jwt"
 
-connectDB()
+const conn = createTrackerConnection(),
+      sessionModel = conn.model('session')
 
 export async function POST(req) {
   const { referrer, ...body } = await req.json(),
         ip = req.headers.get('x-forwarded-for'),
         uidToken = req.cookies.get('uidToken'),
         uid = await decodeCookie(uidToken)
+
+  // conn.close()
 
   try {
     let session = uid ? await findSession({ uid }) : await findSession({ ip })
@@ -25,6 +27,10 @@ export async function POST(req) {
   
   catch (error) {
     return res(error, 400)
+  }
+
+  finally {
+    conn.close()
   }
 }
 

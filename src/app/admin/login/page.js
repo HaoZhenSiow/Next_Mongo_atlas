@@ -102,7 +102,7 @@ function createLoginHandle(login, errRef) {
     button.disabled = true
     errRef.current.hidden = true
   
-    const { status, data } = await axios.post('/tracker/api/auth', payload)
+    const { status, data } = await axios.post('/admin/api/auth', payload)
     if (status === 200) {
       login(data)
     } else {
