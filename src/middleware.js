@@ -21,7 +21,7 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/', '/api/workouts']
+  matcher: ['/', '/login', '/signup', '/api/workouts']
 }
 
 async function verifyToken(token, NextResponse, protectedPages, pathname) {

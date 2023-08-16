@@ -4,11 +4,15 @@ import axios from "axios"
 axios.defaults.validateStatus = false
 
 import AuthStore from "@/_stores/authStore"
+import { redirect } from "next/navigation"
 
 export default function Home() {
+  const { email } = AuthStore.useStoreState(state => state)
+  if (email) redirect('/')
+
   const errRef = useRef()
   const { login } = AuthStore.useStoreActions(actions => actions)
- 
+  
   return (
     <form className="login" onSubmit={handleLogin}>
       <h3>Log In</h3>
