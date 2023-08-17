@@ -1,17 +1,8 @@
-import { useEffect } from "react";
 import Bowser from "bowser"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-const useEventTracker = (pathname) => {
-  useEffect(() => {
-    recordEvent(pathname)
-  }, [pathname]);
-}
-
-export default useEventTracker
-
-export function recordEvent(event) {
+export default function recordEvent(event) {
   const userAgent = Bowser.getParser(window.navigator.userAgent),
         browser = getBrowser(userAgent),
         referrer = document.referrer ? new URL(document.referrer).hostname : 'direct',
@@ -23,7 +14,7 @@ export function recordEvent(event) {
           resolution: screen.width + ' x ' + screen.height
         }
 
-  browser !== 'Electron' && axios.post('/api/tracker/', payload)
+  browser !== 'Electron' && axios.post('/admin/api/events', payload)
 }
 
 export function getBrowser(userAgent) {
@@ -32,12 +23,4 @@ export function getBrowser(userAgent) {
   if (data && data.brands[3]) return 'DuckDuckGo'
   if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
   return userAgent.getBrowser().name
-}
-
-export function trackRemoveWorkout() {
-  recordEvent('remove workout')
-}
-
-export function trackInsertWorkout() {
-  recordEvent('insert workout')
 }

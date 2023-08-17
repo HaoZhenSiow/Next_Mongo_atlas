@@ -1,14 +1,16 @@
 'use client'
 import Link from 'next/link'
-import { eraseCookie } from '@/_lib/utils'
+import Cookies from 'js-cookie'
 import axios from 'axios'
 axios.defaults.validateStatus = false
 
 import AuthStore from "@/_stores/authStore"
 
 const Navbar = () => {
+  const token = Cookies.get('token')
   const { email } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
+  if (!token && email) logout()
 
   return (
     <header>
@@ -36,8 +38,8 @@ const Navbar = () => {
 
   async function logoutHandle() {
     logout()
-    eraseCookie('token')
-    eraseCookie('user')
+    Cookies.remove('user')
+    Cookies.remove('token')
   }
 }
 

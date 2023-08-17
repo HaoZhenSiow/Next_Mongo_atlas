@@ -1,16 +1,19 @@
 require('dotenv').config()
 import mongoose, { Schema } from 'mongoose'
 
-export default function createTrackerConnection() {
-  const conn = mongoose.createConnection(process.env.TRACKER_MONGO_URI, {
-    heartbeatFrequencyMS: 10 * 1000
-  })
-  const pathSchema = createPathSchema(),
-        sessionSchema = createSessionSchema(pathSchema),
-        adminSchema = createAdminSchema()
+let conn = null
 
-  conn.model('session', sessionSchema)
-  conn.model('admin', adminSchema)
+const pathSchema = createPathSchema(),
+      sessionSchema = createSessionSchema(),
+      adminSchema = createAdminSchema()
+
+export default function connectDB() {
+
+  if (!conn) {
+    conn = mongoose.createConnection(process.env.ADMIN_URI)
+    conn.model('session', sessionSchema)
+    conn.model('admin', adminSchema)
+  }
 
   return conn
 }
@@ -37,7 +40,7 @@ function createPathSchema() {
   }, { timestamps: true })
 }
 
-function createSessionSchema(pathSchema) {
+function createSessionSchema() {
   return new Schema({
     uid: {
       type: mongoose.Types.ObjectId,

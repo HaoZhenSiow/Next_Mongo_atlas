@@ -1,9 +1,9 @@
-import createTrackerConnection from "../../_mongoDB/trackerConnection";
+import connectDB from "../../_mongoDB/connectDB";
 import bcrypt from "bcrypt"
 import { genToken } from "../../_lib/utils";
 import { res } from "../../_lib/utils";
 
-const conn = createTrackerConnection(),
+const conn = connectDB(),
       adminModel = conn.model('admin')
 
 
@@ -36,9 +36,6 @@ async function login(username, password) {
     return res('Something went wrong, please try again.', 400)
   }
 
-  finally {
-    conn.close()
-  }
 }
 
 async function signup(username, password) {
@@ -57,9 +54,6 @@ async function signup(username, password) {
     return res('Something went wrong, please try again.', 500)
   }
 
-  finally {
-    conn.close()
-  }
 }
 
 async function loginSuccess(user, username) {

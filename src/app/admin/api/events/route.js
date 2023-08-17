@@ -1,9 +1,8 @@
 import mongoose from "mongoose"
-import createTrackerConnection from "@/app/admin/_mongoDB/trackerConnection"
-import { res } from "@/_lib/utils"
-import { genToken, decodeToken } from "@/_lib/jwt"
+import connectDB from "../../_mongoDB/connectDB"
+import { res, genToken, decodeToken } from "../../_lib/utils"
 
-const conn = createTrackerConnection(),
+const conn = connectDB(),
       sessionModel = conn.model('session')
 
 export async function POST(req) {
@@ -12,9 +11,21 @@ export async function POST(req) {
         uidToken = req.cookies.get('uidToken'),
         uid = await decodeCookie(uidToken)
 
-  // conn.close()
+   // Wait until 'conn' is connected (readyState === 1)
+  if (conn['_readyState'] === 2) {
+    await new Promise((resolve) => {
+      const checkConnection = setInterval(() => {
+        if (conn['_readyState'] === 1 || conn['_readyState'] === 0) {
+          clearInterval(checkConnection);
+          resolve();
+        }
+      }, 100); // Adjust the interval as needed
+    });
+  }
 
   try {
+    if (conn['_readyState'] === 0) return res('', 200)
+
     let session = uid ? await findSession({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
     if (!session) return await createSession({ ip, newUser: true, referrer }, body)
@@ -29,9 +40,6 @@ export async function POST(req) {
     return res(error, 400)
   }
 
-  finally {
-    conn.close()
-  }
 }
 
 async function createSession(details, body) {

@@ -1,6 +1,6 @@
 'use client'
 import styled from 'styled-components'
-import { eraseCookie } from '../_lib/utils';
+import Cookies from 'js-cookie';
 import AuthStore from '../_store/authStore';
 
 const NavbarStyled = createNavbarStyled()
@@ -43,9 +43,9 @@ function createNavbarStyled() {
 }
 
 function createLogoutHandle(logout) {
-  return async function () {
+  return function () {
     logout()
-    eraseCookie('adminToken')
-    eraseCookie('admin')
+    Cookies.remove('admin')
+    Cookies.remove('adminToken')
   }
 }

@@ -1,6 +1,6 @@
 'use client'
 import { useRef } from "react"
-import { trackInsertWorkout } from "@/_hooks/useEventTracker"
+import { trackInsertWorkout } from "@/_lib/EventsTracker"
 import axios from "axios"
 axios.defaults.validateStatus = false
 

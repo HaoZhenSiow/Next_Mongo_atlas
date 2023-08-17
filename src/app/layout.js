@@ -2,7 +2,6 @@ require('dotenv').config()
 
 import ClientOnly from '@/_lib/ClientOnly'
 import StyledComponentsRegistry from '@/_lib/registry'
-import Store from '@/_stores/Store'
 
 
 export const metadata = {

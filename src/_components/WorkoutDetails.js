@@ -1,6 +1,6 @@
 'use client'
 import formatDistanceToNow from 'date-fns/formatDistanceToNow'
-import { trackRemoveWorkout } from '@/_hooks/useEventTracker'
+import { trackRemoveWorkout } from '@/_lib/EventsTracker'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
