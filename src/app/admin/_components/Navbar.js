@@ -6,10 +6,12 @@ import AuthStore from '../_store/authStore';
 const NavbarStyled = createNavbarStyled()
 
 export default function Navbar() {
-
+  const adminToken = Cookies.get('adminToken')
   const { username } = AuthStore.useStoreState(state => state)
   const { logout } = AuthStore.useStoreActions(actions => actions)
   const logoutHandle = createLogoutHandle(logout)
+
+  if (!adminToken && username) logout()
 
   return (
     <NavbarStyled className='container'>
