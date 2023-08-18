@@ -1,16 +1,27 @@
 'use client'
 import { redirect } from "next/navigation"
+import styled from 'styled-components'
 
 import AuthStore from "./_store/authStore"
+
+import LineGraphControls from "./_components/lineGraph/LineGraphControls"
+
+const Dashboard = createDashboard()
 
 export default function Home() {
   const { username } = AuthStore.useStoreState(state => state)
   if (!username) redirect('/admin/login')
-  
+
   return (
-    <div>
-      <h1>Hello Worssld</h1>
+    <Dashboard className="container">
+      <LineGraphControls/>
       
-    </div> 
+    </Dashboard> 
   )
+}
+
+function createDashboard() {
+  return styled.main`
+    border: 1px solid black;
+  `
 }

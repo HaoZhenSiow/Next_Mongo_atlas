@@ -14,6 +14,9 @@ const InitStyle = createGlobalStyle`
   --fluid-h6: clamp(0.94rem, calc(0.94rem + 0.00vw), 0.94rem);
   --fluid-sm: clamp(0.78rem, calc(0.91rem + -0.14vw), 0.88rem);
   --fluid-line-height: calc(1.8em - .4 * ((100vw - 29.08324552em) / (77.58342115)));
+
+  --bg-color: black;
+  --text-color: white;
 }
 
 /* *:not(html, small, blockquote *)  {
