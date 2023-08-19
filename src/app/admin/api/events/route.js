@@ -6,7 +6,7 @@ const conn = connectDB(),
       sessionModel = conn.model('session')
 
 export async function POST(req) {
-  const url = request.headers.get('referer')
+  const url = request.headers.get('referer') || ''
   const { referrer, ...eventDetails } = await req.json(),
         ip = getHashIp(req),
         uidToken = req.cookies.get('uidToken'),
