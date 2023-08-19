@@ -1,13 +1,13 @@
 import mongoose from "mongoose"
 import connectDB from "../../_mongoDB/connectDB"
-import { res, genToken, decodeToken } from "../../_lib/utils"
+import { res, genToken, decodeToken, hashIp } from "../../_lib/utils"
 
 const conn = connectDB(),
       sessionModel = conn.model('session')
 
 export async function POST(req) {
   const { referrer, ...body } = await req.json(),
-        ip = req.headers.get('x-forwarded-for'),
+        ip = hashIp(req.headers.get('x-forwarded-for')),
         uidToken = req.cookies.get('uidToken'),
         uid = await decodeCookie(uidToken)
 

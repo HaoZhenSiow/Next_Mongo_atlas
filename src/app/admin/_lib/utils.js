@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from 'jose'
 import { NextResponse } from 'next/server'
+import CryptoJS from 'crypto-js';
 
 export async function genToken(payload, noExpire = false) {
   const encoder = new TextEncoder();
@@ -27,6 +28,12 @@ export async function decodeToken(token) {
 
 export function res(res, status) {
   return NextResponse.json(res, { status: status })
+}
+
+export function hashIp(ip) {
+  const key = process.env.IP_SECRET
+  const hash = CryptoJS.HmacSHA256(ip, key)
+  return hash.toString(CryptoJS.enc.Hex)
 }
 
 export function newDate(date = null) {
