@@ -3,26 +3,37 @@ import axios from "axios"
 axios.defaults.validateStatus = false
 
 export default function recordEvent(event) {
-  const userAgent = Bowser.getParser(window.navigator.userAgent),
-        browser = getBrowser(userAgent),
-        referrer = document.referrer ? new URL(document.referrer).hostname : 'direct',
+  const parsedUserAgent = getParsedUserAgent(),
+        browser = getBrowser(parsedUserAgent),
+        referrer = getReferrer(),
         payload = {
           referrer,
           event,
-          device: userAgent.getPlatform().type,
+          device: parsedUserAgent.getPlatform().type,
           browser,
           resolution: screen.width + ' x ' + screen.height
         }
 
-  if (referrer !== 'vercel.com' && browser !== 'Electron' && browser !== 'Vercelbot') {
-    axios.post('/admin/api/events', payload)
-  }
+  // const condition = referrer !== 'vercel.com' && 
+  //                   browser !== 'Electron' && 
+  //                   browser !== 'Vercelbot'
+
+  // condition && 
+  axios.post('/admin/api/events', payload)
 }
 
-export function getBrowser(userAgent) {
+export function getBrowser(parsedUserAgent) {
   const data = navigator.userAgentData
   if (!navigator.geolocation) return 'Tor Browser'
   if (data && data.brands[3]) return 'DuckDuckGo'
   if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
-  return userAgent.getBrowser().name
+  return parsedUserAgent.getBrowser().name
+}
+
+function getParsedUserAgent() {
+  return Bowser.getParser(window.navigator.userAgent)
+}
+
+function getReferrer() {
+  return document.referrer ? new URL(document.referrer).hostname : 'direct'
 }

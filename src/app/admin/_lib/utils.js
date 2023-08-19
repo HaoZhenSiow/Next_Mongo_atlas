@@ -30,7 +30,8 @@ export function res(res, status) {
   return NextResponse.json(res, { status: status })
 }
 
-export function hashIp(ip) {
+export function getHashIp(req) {
+  const ip = req.headers.get('x-forwarded-for')
   const key = process.env.IP_SECRET
   const hash = CryptoJS.HmacSHA256(ip, key)
   return hash.toString(CryptoJS.enc.Hex)

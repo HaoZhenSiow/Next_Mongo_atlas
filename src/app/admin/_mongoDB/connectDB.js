@@ -1,14 +1,13 @@
 require('dotenv').config()
 import mongoose, { Schema } from 'mongoose'
 
-let conn = null
-
 const pathSchema = createPathSchema(),
       sessionSchema = createSessionSchema(),
       adminSchema = createAdminSchema()
 
 export default function connectDB() {
-
+  let conn = findConnection()
+  
   if (!conn) {
     conn = mongoose.createConnection(process.env.ADMIN_URI)
     conn.model('session', sessionSchema)
@@ -77,4 +76,8 @@ function createAdminSchema() {
       required: true
     }
   }, { timestamps: true })
+}
+
+function findConnection() {
+  return mongoose.connections.find((conn) => conn.name === process.env.ADMIN_DBNAME)
 }

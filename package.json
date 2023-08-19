@@ -25,5 +25,8 @@
     "react-date-range": "^1.4.0",
     "react-dom": "18.2.0",
     "styled-components": "^6.0.7"
+  },
+  "devDependencies": {
+    "chalk": "^5.3.0"
   }
 }
