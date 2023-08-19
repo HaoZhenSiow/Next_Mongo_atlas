@@ -18,7 +18,6 @@ export async function POST(req) {
   if (conn['_readyState'] === 0) return res('', 200)
 
   try {
-    
     let session = uid ? await findSession({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
     if (!session) return await createSession({ ip, newUser: true, referrer: url }, eventDetails)
