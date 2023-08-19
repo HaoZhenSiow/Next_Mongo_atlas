@@ -5,11 +5,71 @@ import LineGraph from './LineGraph';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
+import { generateFakeData, generateFakePercentageData } from '../../_lib/utils';
 
 const LineGraphControlsStyled = createLineGraphControlsStyled()
 
+// const sessions = new Map([
+//   [newDate('2023-08-19'), 30],
+//   [newDate('2023-08-18'), 30],
+//   [newDate('2023-08-17'), 20],
+//   [newDate('2023-08-16'), 50],
+//   [newDate('2023-08-15'), 80],
+//   [newDate('2023-08-14'), 40],
+//   [newDate('2023-08-13'), 10],
+//   [newDate('2023-08-12'), 120],
+// ])
+
+const allData = {
+  Sessions: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  BounceRate: {
+    dataMap: generateFakePercentageData('2023-08-19', 365),
+    dataType: 'rate'
+  },
+  EngagedSessions: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  EngagedSessionsPerUser: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  EngagementRate: {
+    dataMap: generateFakePercentageData('2023-08-19', 365),
+    dataType: 'rate'
+  },
+  TotalUsers: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  NewUsers: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  ReturningUsers: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  Conversions: {
+    dataMap: generateFakeData('2023-08-19', 365),
+    dataType: 'number'
+  },
+  SessionConversionRate: {
+    dataMap: generateFakePercentageData('2023-08-19', 365),
+    dataType: 'rate'
+  },
+  UserConversionRate: {
+    dataMap: generateFakePercentageData('2023-08-19', 365),
+    dataType: 'rate'
+  },
+}
+
 export default function LineGraphControls() {
-  const [period, setPeriod] = useState('Last 7 days'),
+  const [data, setData] = useState(Object.values(allData)[0]),
+        [period, setPeriod] = useState('Last 7 days'),
         [showSelectionRange, setShowSelectionRange] = useState(false),
         initDateRage = {startDate: new Date(), endDate: new Date()},
         [dateRange, setDateRange] = useState(initDateRage),
@@ -17,7 +77,8 @@ export default function LineGraphControls() {
           startDate: dateRange.startDate,
           endDate: dateRange.endDate,
           key: 'selection'
-        }, [xInterval, setXinterval] = useState('day')
+        }, [xInterval, setXinterval] = useState('day'),
+        [total, setTotal] = useState('')
 
   const handlePeriodChange = (event) => {
     if (event.target.value === 'custom') {
@@ -48,6 +109,10 @@ export default function LineGraphControls() {
     setXinterval(event.target.value)
   }
 
+  const handleDataChange = (event) => {
+    setData(allData[event.target.value.split(' ').join('')])
+  }
+
   useEffect(() => {
     if (showSelectionRange) {
       setTimeout(() => {
@@ -73,7 +138,7 @@ export default function LineGraphControls() {
     <LineGraphControlsStyled>
       <div className="controls">
         <div className="field">
-          <select>
+          <select onChange={handleDataChange}>
             <option value="Sessions" defaultValue>Sessions</option>
             <option value="Bounce Rate">Bounce Rate</option>
             <option value="Engaged Sessions">Engaged Sessions</option>
@@ -86,6 +151,7 @@ export default function LineGraphControls() {
             <option value="Session Conversion Rate">Session Conversion Rate</option>
             <option value="User Conversion Rate">User Conversion Rate</option>
           </select>
+          <p>{total}</p>
         </div>
         
         <div className="period">
@@ -124,7 +190,7 @@ export default function LineGraphControls() {
           </select>
         </div>
       </div>
-      <LineGraph period={period} xInterval={xInterval}/>
+      <LineGraph data={data} period={period} xInterval={xInterval} setTotal={setTotal}/>
     </LineGraphControlsStyled>
   );
 }
@@ -147,6 +213,12 @@ function createLineGraphControlsStyled() {
 
       .field {
         flex-grow: 1;
+        display: flex;
+
+        p {
+          margin-left: .5em;
+          color: var(--text-color);
+        }
       }
 
       .period {

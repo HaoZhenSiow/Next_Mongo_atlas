@@ -9,7 +9,7 @@ export async function middleware(request) {
 
   // const protectedAdminPages = ['/admin'],
   //       adminToken = request.cookies.get('adminToken'),
-        
+
   switch (true) {
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })

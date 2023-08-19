@@ -44,7 +44,8 @@ export function getMedium(map) {
         nearest = 10 ** digit
 
   let medium = average > 9 ? Math.floor(average / nearest) * nearest : 10,
-      unit = ''
+      unit = '',
+      unitVal = 1
 
   if (medium * 2 < newHighest) {
     medium = Math.ceil((newHighest/2) / nearest) * nearest
@@ -53,14 +54,16 @@ export function getMedium(map) {
   switch (true) {
     case (medium/2 >= 1000000):
       unit = 'M'
-      medium /= 1000000
+      unitVal = 1000000
+      medium /= unitVal
       break
     case (medium/2 >= 1000):
       unit = 'K'
-      medium /= 1000
+      unitVal = 1000
+      medium /= unitVal
       break
   }
-  return { medium, unit }
+  return { medium, unit, unitVal, sum }
 }
 
 export function createDateArr(period) {
@@ -99,6 +102,99 @@ export function createDateArr(period) {
 
     dateArr.push({ fullDate, day, month, showdate })
   }
-  
+
   return dateArr
+}
+
+export function groupData(data, xInterval) {
+  let groupedData = data
+  switch (xInterval) {
+    case 'week':
+      groupedData = groupByWeek(data)
+      break
+    case 'month':
+      groupedData = groupByMonth(data)
+      break
+  }
+  return groupedData
+}
+
+function groupByWeek(data) {
+  const groupedData = new Map()
+
+  data.forEach((val, dateStr) => {
+    const startOfWeek = new Date(dateStr)
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay()); // Find the Sunday of the week
+    const Sunday = newDate(startOfWeek)
+    if (!groupedData.has(Sunday)) {
+      groupedData.set(Sunday, val);
+    } else {
+      groupedData.set(Sunday, groupedData.get(Sunday) + val);
+    }
+  });
+
+  return groupedData
+}
+
+function groupByMonth(data) {
+  const groupedData = new Map()
+
+  data.forEach((val, dateStr) => {
+    const date = new Date(dateStr)
+    const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1); // Find the 1st day of the month
+
+    const firstDay = newDate(startOfMonth)
+    if (!groupedData.has(firstDay)) {
+      groupedData.set(firstDay, val);
+    } else {
+      groupedData.set(firstDay, groupedData.get(firstDay) + val);
+    }
+  });
+
+  return groupedData
+}
+
+export function getVisibleDates(dateArr, xInterval) {
+  let visibleDates = []
+  switch (xInterval) {
+    case 'week':
+      visibleDates = dateArr.filter((date) => date.fullDate.getDay() === 0)
+      visibleDates = visibleDates.map(date => newDate(date.fullDate))
+      break
+    case 'month':
+      visibleDates = dateArr.filter((date) => date.fullDate.getDate() === 1)
+      visibleDates = visibleDates.map(date => newDate(date.fullDate))
+      break
+    default:
+      visibleDates = dateArr.map(date => newDate(date.fullDate))
+  }
+  return visibleDates
+}
+
+export function generateFakeData(dateStr, period) {
+  const fakeData = new Map();
+
+  const startDate = new Date(dateStr);
+  for (let i = 0; i < period; i++) {
+    const currentDate = new Date(startDate);
+    currentDate.setDate(startDate.getDate() - i);
+    const randomSessions = Math.floor(Math.random() * 150); // Generate random session count
+    fakeData.set(newDate(currentDate), randomSessions);
+  }
+
+  return fakeData
+}
+
+export function generateFakePercentageData(dateStr, period) {
+  const fakeData = new Map();
+
+  const startDate = new Date(dateStr);
+  for (let i = 0; i < period; i++) {
+    const currentDate = new Date(startDate);
+    currentDate.setDate(startDate.getDate() - i);
+    const randomSessions = Math.floor(Math.random() * 100); // Generate random session count
+    fakeData.set(newDate(currentDate), randomSessions);
+  }
+
+  return fakeData
 }

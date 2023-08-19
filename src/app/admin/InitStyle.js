@@ -16,6 +16,7 @@ const InitStyle = createGlobalStyle`
   --fluid-line-height: calc(1.8em - .4 * ((100vw - 29.08324552em) / (77.58342115)));
 
   --bg-color: black;
+  --bg-color2: lightgrey;
   --text-color: white;
 }
 
