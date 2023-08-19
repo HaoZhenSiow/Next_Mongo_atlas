@@ -14,7 +14,9 @@ export default function recordEvent(event) {
           resolution: screen.width + ' x ' + screen.height
         }
 
-  browser !== 'Electron' && axios.post('/admin/api/events', payload)
+  if (referrer !== 'vercel.com' && browser !== 'Electron') {
+    axios.post('/admin/api/events', payload)
+  }
 }
 
 export function getBrowser(userAgent) {
