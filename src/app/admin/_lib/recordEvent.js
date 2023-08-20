@@ -1,10 +1,8 @@
-import chalk from "chalk"
 import Bowser from "bowser"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
 export default function recordEvent(event) {
-  console.log(chalk.red(event))
   const parsedUserAgent = getParsedUserAgent(),
         browser = getBrowser(parsedUserAgent),
         referrer = getReferrer(),

@@ -1,7 +1,7 @@
 'use client'
 import styled from 'styled-components'
 import Cookies from 'js-cookie';
-import { usePathname, redirect } from 'next/navigation'
+
 import AuthStore from '../_store/authStore';
 
 const NavbarStyled = createNavbarStyled()
@@ -13,11 +13,6 @@ export default function Navbar() {
         adminToken = Cookies.get('adminToken')
 
   if (!adminToken && username) logoutHandler()
-
-  const currentPath = usePathname()
-
-  if (currentPath === '/admin' && !username) redirect('/admin/login')
-  if (currentPath === '/admin/login' && username) redirect('/admin')
 
   return (
     <NavbarStyled className='container'>

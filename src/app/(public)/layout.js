@@ -2,6 +2,7 @@ import './globals.css'
 import Navbar from '@/_components/Navbar'
 import NavigationEvents from '../admin/_components/NavigationEvents'
 import Store from '@/_stores/Store'
+import PageAuth from '@/_stores/PageAuth'
 
 
 export const metadata = {
@@ -12,8 +13,9 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   return (
     <Store>
-      <Navbar/>
+      <PageAuth/>
       <NavigationEvents/>
+      <Navbar/>
       <div className="pages">
         {children}
       </div>

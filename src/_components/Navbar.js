@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import { usePathname, redirect } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 axios.defaults.validateStatus = false
@@ -14,13 +13,6 @@ export default function Navbar() {
         token = Cookies.get('token')
   
   if (!token && email) logoutUser()
-
-  const currentPath = usePathname(),
-        protectedPath = ['/'],
-        authPath = ['/login', '/signup']
-
-  if (protectedPath.includes(currentPath) && !email) redirect('/login')
-  if (authPath.includes(currentPath) && email) redirect('/')
 
   return (
     <header>
