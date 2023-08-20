@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import connectDB from "../../_mongoDB/connectDB"
 import { res, genToken, decodeToken, getHashIp } from "../../_lib/utils"
+import chalk from "chalk"
 
 const conn = connectDB(),
       sessionModel = conn.model('session')
@@ -59,29 +60,19 @@ async function continueSession(session, eventDetails) {
   try {
     const prevEvent = session.events.at(-1),
           isPageEvent = prevEvent.event.startsWith('/'),
-          isRefreshEvent = prevEvent.event === eventDetails.event,
+          isSameEvent = prevEvent.event === eventDetails.event,
+          isSameDevice = prevEvent.device === eventDetails.device,
+          isPageRefresh = isPageEvent && isSameEvent && isSameDevice,
           isNotSameDevice = prevEvent.device !== eventDetails.device
 
-    // when user switch device and same page
-    if (isPageEvent && isRefreshEvent && isNotSameDevice) {
-      session.events.push({
-        ...eventDetails,
-        type: 'switch device',
-        event: `from ${prevEvent.device} to ${eventDetails.device}`
-      })
-      await session.save()
-
-      return await returnUIDtoken(session.uid, 'added new event')
-    }
-
     // do nothing when user refresh page
-    if (isPageEvent && isRefreshEvent) return res('refresh page', 200)
+    if (isPageRefresh) return res('refresh page', 200)
     
     const prevEventDuration = new Date() - prevEvent.createdAt
     prevEvent.duration = prevEventDuration
 
+    // when user switch device
     if (isNotSameDevice) {
-      prevEvent.duration = 0
       session.events.push({
         ...eventDetails,
         type: 'switch device',
