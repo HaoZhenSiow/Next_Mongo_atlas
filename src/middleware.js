@@ -18,7 +18,9 @@ export async function middleware(request) {
       return await verifyToken(token, NextResponse, protectedPages, pathname) 
 
     default:
-      return NextResponse.next()
+      const res = NextResponse.next()
+      res.cookies.set('referer', request.headers.get('referer'))
+      return res
   }  
 
 }

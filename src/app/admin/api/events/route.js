@@ -6,7 +6,6 @@ const conn = connectDB(),
       sessionModel = conn.model('session')
 
 export async function POST(req) {
-  const url = request.headers.get('referer') || ''
   const { referrer, ...eventDetails } = await req.json(),
         ip = getHashIp(req),
         uidToken = req.cookies.get('uidToken'),
@@ -19,10 +18,10 @@ export async function POST(req) {
   try {
     let session = uid ? await findSession({ uid }) : await findSession({ ip })
     if (!session) { session = await findSession({ ip }) }
-    if (!session) return await createSession({ ip, newUser: true, referrer: url }, eventDetails)
+    if (!session) return await createSession({ ip, newUser: true, referrer }, eventDetails)
 
     const sessionIsExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
-    if (sessionIsExpired) return await createSession({ ip, newUser: false, referrer: url }, eventDetails)
+    if (sessionIsExpired) return await createSession({ ip, newUser: false, referrer }, eventDetails)
 
     return await continueSession(session, eventDetails)
   }
