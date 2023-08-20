@@ -1,16 +1,26 @@
 'use client'
 import Link from 'next/link'
+import { usePathname, redirect } from 'next/navigation'
 import Cookies from 'js-cookie'
 import axios from 'axios'
 axios.defaults.validateStatus = false
 
 import AuthStore from "@/_stores/authStore"
 
-const Navbar = () => {
-  const token = Cookies.get('token')
-  const { email } = AuthStore.useStoreState(state => state)
-  const { logout } = AuthStore.useStoreActions(actions => actions)
-  if (!token && email) logout()
+export default function Navbar() {
+  const { email } = AuthStore.useStoreState(state => state),
+        { logout } = AuthStore.useStoreActions(actions => actions),
+        logoutUser = createLogoutUser(logout),
+        token = Cookies.get('token')
+  
+  if (!token && email) logoutUser()
+
+  const currentPath = usePathname(),
+        protectedPath = ['/'],
+        authPath = ['/login', '/signup']
+
+  if (protectedPath.includes(currentPath) && !email) redirect('/login')
+  if (authPath.includes(currentPath) && email) redirect('/')
 
   return (
     <header>
@@ -22,7 +32,7 @@ const Navbar = () => {
           {email && (
             <div>
               <span>{email}</span>
-              <button onClick={logoutHandle}>Log out</button>
+              <button onClick={logoutUser}>Log out</button>
             </div>
           )}
           {!email && (
@@ -35,12 +45,12 @@ const Navbar = () => {
       </div>
     </header>
   )
+}
 
-  async function logoutHandle() {
+function createLogoutUser(logout) {
+  return function () {
     logout()
     Cookies.remove('user')
     Cookies.remove('token')
   }
 }
-
-export default Navbar

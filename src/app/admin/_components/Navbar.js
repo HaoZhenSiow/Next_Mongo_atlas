@@ -1,17 +1,23 @@
 'use client'
 import styled from 'styled-components'
 import Cookies from 'js-cookie';
+import { usePathname, redirect } from 'next/navigation'
 import AuthStore from '../_store/authStore';
 
 const NavbarStyled = createNavbarStyled()
 
 export default function Navbar() {
-  const adminToken = Cookies.get('adminToken')
-  const { username } = AuthStore.useStoreState(state => state)
-  const { logout } = AuthStore.useStoreActions(actions => actions)
-  const logoutHandle = createLogoutHandle(logout)
+  const { username } = AuthStore.useStoreState(state => state),
+        { logout } = AuthStore.useStoreActions(actions => actions),
+        logoutHandler = createLogoutHandler(logout),
+        adminToken = Cookies.get('adminToken')
 
-  if (!adminToken && username) logout()
+  if (!adminToken && username) logoutHandler()
+
+  const currentPath = usePathname()
+
+  if (currentPath === '/admin' && !username) redirect('/admin/login')
+  if (currentPath === '/admin/login' && username) redirect('/admin')
 
   return (
     <NavbarStyled className='container'>
@@ -19,7 +25,7 @@ export default function Navbar() {
       {username && (
         <div className="status">
           <p>Logged in as {username}</p>
-          <button type='button' onClick={logoutHandle}>Log out</button>
+          <button type='button' onClick={logoutHandler}>Log out</button>
         </div>
       )}
       
@@ -44,7 +50,7 @@ function createNavbarStyled() {
   `
 }
 
-function createLogoutHandle(logout) {
+function createLogoutHandler(logout) {
   return function () {
     logout()
     Cookies.remove('admin')

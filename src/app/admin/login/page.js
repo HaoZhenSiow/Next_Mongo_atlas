@@ -1,7 +1,6 @@
 'use client'
 import { useRef } from "react"
 import styled from 'styled-components'
-import { redirect } from "next/navigation"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
@@ -11,12 +10,8 @@ const Main = createMain()
 
 export default function Home() {
   const errRef = useRef()
-  const { username } = AuthStore.useStoreState(state => state)
   const { login } = AuthStore.useStoreActions(actions => actions)
   const handleLogin = createLoginHandle(login, errRef)
-
-  if (username) redirect('/admin')
-  
 
   return (
     <Main>

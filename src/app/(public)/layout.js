@@ -11,14 +11,12 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <>
+    <Store>
+      <Navbar/>
       <NavigationEvents/>
-      <Store>
-        <Navbar/>
-        <div className="pages">
-          {children}
-        </div>
-      </Store>
-    </>
+      <div className="pages">
+        {children}
+      </div>
+    </Store>
   )
 }

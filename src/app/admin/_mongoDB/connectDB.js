@@ -1,7 +1,7 @@
 require('dotenv').config()
 import mongoose, { Schema } from 'mongoose'
 
-const pathSchema = createPathSchema(),
+const eventSchema = createEventSchema(),
       sessionSchema = createSessionSchema(),
       adminSchema = createAdminSchema()
 
@@ -17,8 +17,16 @@ export default function connectDB() {
   return conn
 }
 
-function createPathSchema() {
+function createEventSchema() {
   return new Schema({
+    _id: {
+      type: mongoose.Types.ObjectId,
+      required: false
+    },
+    type: {
+      type: String,
+      required: true
+    },
     event: {
       type: String,
       required: true
@@ -58,7 +66,7 @@ function createSessionSchema() {
       required: true
     },
     events: {
-      type: [pathSchema],
+      type: [eventSchema],
       required: true
     }
   }, { timestamps: true })

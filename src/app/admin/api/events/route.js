@@ -8,20 +8,26 @@ const conn = connectDB(),
 export async function POST(req) {
   const { referrer, ...eventDetails } = await req.json(),
         ip = getHashIp(req),
-        uidToken = req.cookies.get('uidToken'),
-        uid = await decodeCookie(uidToken)
+        uid = await getUID(req)
 
   await waitForConnection()
   
   if (conn['_readyState'] === 0) return res('', 200)
 
   try {
-    let session = uid ? await findSession({ uid }) : await findSession({ ip })
-    if (!session) { session = await findSession({ ip }) }
+    let session = await findSession({ uid }) || await findSession({ ip })
+
     if (!session) return await createSession({ ip, newUser: true, referrer }, eventDetails)
 
     const sessionIsExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
-    if (sessionIsExpired) return await createSession({ ip, newUser: false, referrer }, eventDetails)
+    if (sessionIsExpired) {
+      return await createSession({
+        uid: session.uid,
+        ip,
+        newUser: false,
+        referrer 
+      }, eventDetails)
+    }
 
     return await continueSession(session, eventDetails)
   }
@@ -32,18 +38,12 @@ export async function POST(req) {
 
 }
 
-async function createSession(details, eventDetails) {
+async function createSession(sessionDetails, eventDetails) {
   try {
     const session = await sessionModel.create({
-      uid: new mongoose.Types.ObjectId(),
-      ...details,
-      events: [
-        {
-          ...eventDetails,
-          event: `${eventDetails.device}`
-        },
-        eventDetails
-      ]
+      ...sessionDetails,
+      uid: sessionDetails.newUser ? new mongoose.Types.ObjectId() : sessionDetails.uid,
+      events: [eventDetails]
     })
 
     return await returnUIDtoken(session.uid, 'created new session')
@@ -66,7 +66,8 @@ async function continueSession(session, eventDetails) {
     if (isPageEvent && isRefreshEvent && isNotSameDevice) {
       session.events.push({
         ...eventDetails,
-        event: `${eventDetails.device}`
+        type: 'switch device',
+        event: `from ${prevEvent.device} to ${eventDetails.device}`
       })
       await session.save()
 
@@ -83,7 +84,8 @@ async function continueSession(session, eventDetails) {
       prevEvent.duration = 0
       session.events.push({
         ...eventDetails,
-        event: `${eventDetails.device}`
+        type: 'switch device',
+        event: `from ${prevEvent.device} to ${eventDetails.device}`
       })
     }
 
@@ -137,4 +139,9 @@ async function waitForConnection() {
       }, 100) // Adjust the interval as needed
     })
   }
+}
+
+async function getUID(req) {
+  const uidToken = req.cookies.get('uidToken')
+  return  await decodeCookie(uidToken)
 }
