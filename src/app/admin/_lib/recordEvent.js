@@ -14,7 +14,7 @@ export default function recordEvent(event) {
           browser,
           resolution: screen.width + ' x ' + screen.height
         }
-
+  
   // const condition = referrer !== 'vercel.com' && 
   //                   browser !== 'Electron' && 
   //                   browser !== 'Vercelbot'

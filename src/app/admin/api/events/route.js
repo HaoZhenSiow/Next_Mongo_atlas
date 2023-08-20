@@ -8,8 +8,20 @@ const conn = connectDB(),
 
 export async function POST(req) {
   const { referrer, ...eventDetails } = await req.json(),
-        ip = getHashIp(req),
+        ip = process.env.DEV_MODE ? 'dev mode' : getHashIp(req),
         uid = await getUID(req)
+
+  const sessionDetails = {
+    ip,
+    newUser: false,
+    referrer,
+    devices: {
+      [eventDetails.device]: {
+        browser: eventDetails.browser,
+        resolution: eventDetails.resolution
+      }
+    }
+  }
 
   await waitForConnection()
   
@@ -18,15 +30,18 @@ export async function POST(req) {
   try {
     let session = await findSession({ uid }) || await findSession({ ip })
 
-    if (!session) return await createSession({ ip, newUser: true, referrer }, eventDetails)
+    if (!session) {
+      return await createSession({ 
+        ...sessionDetails,
+        newUser: true
+      }, eventDetails)
+    }
 
     const sessionIsExpired = (new Date() - session.updatedAt) > 30 * 60 * 1000
     if (sessionIsExpired) {
       return await createSession({
+        ...sessionDetails,
         uid: session.uid,
-        ip,
-        newUser: false,
-        referrer 
       }, eventDetails)
     }
 
@@ -73,6 +88,10 @@ async function continueSession(session, eventDetails) {
 
     // when user switch device
     if (isNotSameDevice) {
+      session.devices.set(eventDetails.device, {
+        browser: eventDetails.browser,
+        resolution: eventDetails.resolution
+      })
       session.events.push({
         ...eventDetails,
         type: 'switch device',

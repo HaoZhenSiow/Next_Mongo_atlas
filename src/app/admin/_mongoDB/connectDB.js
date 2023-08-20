@@ -65,6 +65,10 @@ function createSessionSchema() {
       type: String,
       required: true
     },
+    devices: {
+      type: Map,
+      required: true
+    },
     events: {
       type: [eventSchema],
       required: true
