@@ -1,7 +1,5 @@
 'use client'
 import { usePathname, redirect } from 'next/navigation'
-import { useEffect } from "react"
-
 import AuthStore from '../_store/authStore'
 
 export default function PageAuth() {
@@ -11,14 +9,12 @@ export default function PageAuth() {
         protectedPath = ['/admin'],
         authPath = ['/admin/login']
 
-  useEffect(() => {
-    if (protectedPath.includes(currentPath) && !username) {
-      redirect('/admin/login')
-    }
-    if (authPath.includes(currentPath) && username) {
-      redirect('/admin')
-    }
-  }, [currentPath, username])
+  if (protectedPath.includes(currentPath) && !username) {
+    redirect('/admin/login')
+  }
+  if (authPath.includes(currentPath) && username) {
+    redirect('/admin')
+  }
 
   return null
 }

@@ -2,15 +2,14 @@ import Bowser from "bowser"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-export default function recordEvent(event) {
-  const parsedUserAgent = getParsedUserAgent(),
-        browser = getBrowser(parsedUserAgent),
+export default function recordEvent(event, type = 'event') {
+  const browser = getBrowser(),
         referrer = getReferrer(),
         payload = {
           referrer,
-          type: event.startsWith('/') ? 'pageView' : 'event',
+          type,
           event,
-          device: parsedUserAgent.getPlatform().type,
+          device: getDeviceType(),
           browser,
           resolution: screen.width + ' x ' + screen.height
         }
@@ -23,12 +22,16 @@ export default function recordEvent(event) {
   axios.post('/admin/api/events', payload)
 }
 
-export function getBrowser(parsedUserAgent) {
+export function getBrowser() {
   const data = navigator.userAgentData
   if (!navigator.geolocation) return 'Tor Browser'
   if (data && data.brands[3]) return 'DuckDuckGo'
   if (data &&  data.brands[2] && data.brands[2].brand === 'Brave') return 'Brave'
-  return parsedUserAgent.getBrowser().name
+  return Bowser.getParser(window.navigator.userAgent).getBrowser().name
+}
+
+function getDeviceType() {
+  return Bowser.getParser(window.navigator.userAgent).getPlatform().type
 }
 
 function getParsedUserAgent() {
