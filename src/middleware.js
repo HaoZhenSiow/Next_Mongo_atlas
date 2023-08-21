@@ -1,21 +1,29 @@
 import { NextResponse } from "next/server"
-import { decodeToken } from "./_lib/jwt"
+import { genToken, decodeToken } from "./_lib/jwt"
+
+const protectedApi = ['/api/workouts'],
+      protectedPages = ['/']
 
 export async function middleware(request) {
-  const protectedApi = ['/api/workouts'],
-        protectedPages = ['/'],
-        token = request.cookies.get('token'),
+  const token = request.cookies.get('token'),
+        tokenA = request.cookies.get('tokenA'),
+        tokenB = request.cookies.get('tokenB'),
         { pathname } = request.nextUrl
 
   // const protectedAdminPages = ['/admin'],
   //       adminToken = request.cookies.get('adminToken'),
 
   switch (true) {
+    case Boolean(pathname === '/about'):
+      if (tokenA) return await verifyABcookie(tokenA, 'tokenASecret')
+      if (tokenB) return await verifyABcookie(tokenB, 'tokenBSecret')
+      return await createABcookie()
+    
     case Boolean(protectedApi.includes(pathname) && !token):
       return NextResponse.json('Authorization Token required', { status: 401 })
       
     case Boolean(token):
-      return await verifyToken(token, NextResponse, protectedPages, pathname) 
+      return await verifyToken(token, pathname) 
 
     default:
       return NextResponse.next()
@@ -24,10 +32,10 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/', '/login', '/signup', '/api/workouts']
+  matcher: ['/', '/about', '/login', '/signup', '/api/workouts']
 }
 
-async function verifyToken(token, NextResponse, protectedPages, pathname) {
+async function verifyToken(token, pathname) {
   try {
     const { id } = await decodeToken(token.value)
     const response = NextResponse.next()
@@ -41,5 +49,29 @@ async function verifyToken(token, NextResponse, protectedPages, pathname) {
     response.cookies.delete('token')
                     .delete('user')
     return response
+  }
+}
+
+async function createABcookie() {
+  const response = NextResponse.next(),
+        cookieOptions = { sameSite: 'strict', maxAge: 365 * 24 * 60 * 60 * 1000 },
+        AorB = Math.random() > 0.5 ? true : false,
+        ABtoken = await genToken({ AorB: AorB?'tokenASecret':'tokenBSecret' }, true)
+
+  response.cookies.delete('tokenA')
+  response.cookies.delete('tokenB')
+
+  AorB ? response.cookies.set('tokenA', ABtoken, cookieOptions) : response.cookies.set('tokenB', ABtoken, cookieOptions) 
+  return response
+}
+
+async function verifyABcookie(token, secret) {
+  try {
+    const { AorB } = await decodeToken(token.value)
+    return AorB === secret ? NextResponse.next() : await createABcookie()
+  }
+  
+  catch {
+    return await createABcookie()
   }
 }

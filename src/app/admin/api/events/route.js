@@ -11,7 +11,9 @@ export async function POST(req) {
   const { referrer, ...eventDetails } = await req.json(),
         ip = process.env.DEV_MODE ? 'dev mode' : getHashIp(req),
         uid = await getUID(req)
-  console.log(chalk.bgGreen(eventDetails.event, eventDetails.type))
+
+  process.env.DEV_MODE && console.log(chalk.bgGreen(eventDetails.event, eventDetails.type))
+  
   const sessionDetails = {
     ip,
     newUser: false,
