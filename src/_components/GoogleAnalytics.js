@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import ReactGA from 'react-ga4'
 
 export default function GoogleAnalytics() {
-  ReactGA.initialize(process.env.GA_ID)
+  ReactGA.initialize('G-568949T8LM')
 
   let page = usePathname()
 
