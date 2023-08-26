@@ -1,13 +1,19 @@
 'use client'
 import AuthStore from "./authStore"
+import LineChartStore from "./lineChartStore"
+import DataStore from "./dataStore"
 
 export default function Store({ children }) {
 
   return (
     <AuthStore.Provider>
-      <WaitForStateRehydration>
-          {children}
-      </WaitForStateRehydration>
+      <DataStore.Provider>
+        <LineChartStore.Provider>
+          <WaitForStateRehydration>
+              {children}
+          </WaitForStateRehydration>
+        </LineChartStore.Provider>
+      </DataStore.Provider>
     </AuthStore.Provider>
   )
 }
