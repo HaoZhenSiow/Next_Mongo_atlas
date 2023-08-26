@@ -5,6 +5,8 @@ import { useEffect } from "react"
 import ReactGA from 'react-ga4'
 
 export default function GoogleAnalytics() {
+  ReactGA.initialize(process.env.GA_ID)
+
   let page = usePathname()
 
   const tokenA = Cookies.get('tokenA'),

@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { genToken, decodeToken } from "./_lib/jwt"
-import ReactGA from 'react-ga4'
 
 const protectedApi = ['/api/workouts'],
       protectedPages = ['/']
@@ -11,7 +10,6 @@ export async function middleware(request) {
         tokenB = request.cookies.get('tokenB'),
         { pathname } = request.nextUrl
 
-  ReactGA.initialize("G-568949T8LM");
   // const protectedAdminPages = ['/admin'],
   //       adminToken = request.cookies.get('adminToken'),
 
