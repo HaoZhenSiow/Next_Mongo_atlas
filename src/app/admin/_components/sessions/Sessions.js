@@ -1,14 +1,21 @@
 import styled from 'styled-components'
 
 import { useLineChartStore } from '../../_store/lineChartStore'
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useIntersection } from '@mantine/hooks';
 
 const SessionsStyled = createSessionsStyled()
 
 export default function Sessions(props) {
   const { rawData } = useLineChartStore(),
         sliceData = createSliceData(rawData),
-        [pagination, setPagination] = useState({ sessions: sliceData(1), page: 1 })
+        [pagination, setPagination] = useState({ sessions: sliceData(1), page: 1 }),
+        lastSessionRef = useRef(null),
+        { ref, entry } = useIntersection({
+          root: lastSessionRef.current,
+          threshold: 1
+        })
+
 
   const loadMore = () => {
     setPagination(prev => ({ 
@@ -16,6 +23,10 @@ export default function Sessions(props) {
       page: prev.page + 1 
     }))
   }
+
+  useEffect(() => {
+    entry?.isIntersecting && loadMore()
+  }, [entry])
 
   return (
     <SessionsStyled className={props.className}>
@@ -35,23 +46,31 @@ export default function Sessions(props) {
             </tr>
           </thead>
           <tbody>
-            {pagination.sessions.map((session, index) => (
-              <tr key={index}>
-                <td>27 Mar</td>
-                <td>dsadw4343sd</td>
-                <td>Yes</td>
-                <td>15 min</td>
-                <td>Desktop</td>
-                <td>Google</td>
-                <td>9</td>
-                <td>Yes</td>
-              </tr>
-            ))}
-            {pagination.sessions.length < rawData.length && (
+            {pagination.sessions.map((session, index) => {
+              const attrs = { key: index }
+
+              if (index === pagination.sessions.length - 1) {
+                attrs.ref = ref
+              }
+
+              return (
+                <tr {...attrs}>
+                  <td>27 Mar</td>
+                  <td>dsadw4343sd</td>
+                  <td>Yes</td>
+                  <td>15 min</td>
+                  <td>Desktop</td>
+                  <td>Google</td>
+                  <td>9</td>
+                  <td>Yes</td>
+                </tr>)
+              }
+            )}
+            {/* {pagination.sessions.length < rawData.length && (
               <tr className='load-more' onClick={loadMore}>
                 <td colSpan="8">Load More</td>
               </tr>
-            )}
+            )} */}
           </tbody>
         </table>
       </div>
