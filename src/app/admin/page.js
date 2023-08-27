@@ -5,6 +5,7 @@ import { fakeSessionsGenerator } from './_lib/fakeData'
 import { useLineChartStore } from './_store/lineChartStore'
 
 import LineGraphControls from "./_components/lineGraph/LineGraphControls"
+import Sessions from './_components/sessions/Sessions'
 
 const Dashboard = createDashboard()
 
@@ -18,12 +19,29 @@ export default function Home() {
   return (
     <Dashboard className="container">
       <LineGraphControls/>
+      <Sessions/>
     </Dashboard> 
   )
 }
 
 function createDashboard() {
   return styled.main`
-    border: 1px solid black;
+    background-color: var(--bg-color2);
+    color: var(--text-color);
+
+    & > div {
+      background-color: var(--bg-color);
+      padding: 30px;
+      border-radius: 10px;
+      margin-block-end: 3em;
+
+      h2 {
+        margin-bottom: .5em;
+      }
+
+      &:last-child {
+        margin-block-end: 0;
+      }
+    }
   `
 }

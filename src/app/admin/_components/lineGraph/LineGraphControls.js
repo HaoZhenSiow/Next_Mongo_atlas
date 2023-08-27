@@ -42,10 +42,6 @@ export default function LineGraphControls() {
 
 function createLineGraphControlsStyled() {
   return styled.div`
-    background-color: var(--bg-color);
-    width: 100%;
-    padding: 20px;
-
     .controls {
       display: flex;
       margin-bottom: 1em;
@@ -54,6 +50,8 @@ function createLineGraphControlsStyled() {
         background-color: var(--bg-color);
         color: var(--text-color);
         font-size: .9em;
+        border: 1px solid var(--text-color);
+        border-radius: 5px;
       }
 
       .field {

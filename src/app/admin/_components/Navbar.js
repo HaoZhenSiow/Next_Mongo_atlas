@@ -33,6 +33,9 @@ function createNavbarStyled() {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--bg-color2);
+    color: var(--text-color);
+    padding-block: 1em;
 
     .status {
       display: flex;

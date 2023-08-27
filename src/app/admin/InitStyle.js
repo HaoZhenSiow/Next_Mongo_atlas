@@ -15,9 +15,9 @@ const InitStyle = createGlobalStyle`
   --fluid-sm: clamp(0.78rem, calc(0.91rem + -0.14vw), 0.88rem);
   --fluid-line-height: calc(1.8em - .4 * ((100vw - 29.08324552em) / (77.58342115)));
 
-  --bg-color: black;
-  --bg-color2: lightgrey;
-  --text-color: white;
+  --bg-color: #565a61;
+  --bg-color2: #333535;
+  --text-color: #ffffff;
 }
 
 /* *:not(html, small, blockquote *)  {
@@ -136,13 +136,16 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type
 
 .container {
   /* @link https://utopia.fyi/type/calculator?c=330,315,1.067,1440,1200,1.2,5,2,1920&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
-  width: clamp(19.69rem, calc(3.24rem + 79.73vw), 75.00rem);
+  /* width: clamp(19.69rem, calc(3.24rem + 79.73vw), 75.00rem);
   margin-inline: auto;
-  position: relative;
+  position: relative; */
+  --container-width: clamp(19.69rem, calc(3.24rem + 79.73vw), 75.00rem);
+  --paddingX: calc((100vw - var(--container-width))/2);
+  padding-inline: var(--paddingX);
 }
 
 // apply styles to contaier's background
-.container::after {
+/* .container::after {
   content: '';
   width: 100vw;
   height: 100%;
@@ -152,7 +155,7 @@ button:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type
   translate: -50% -50%;
   z-index: -1;
   display: none;
-}
+} */
 `;
 
 export default InitStyle;
