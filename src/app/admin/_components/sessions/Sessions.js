@@ -1,8 +1,10 @@
 import styled from 'styled-components'
+import { useEffect, useRef, useState } from 'react'
+import { useIntersection } from '@mantine/hooks'
+import prettyMilliseconds from 'pretty-ms'
+import dayjs from 'dayjs'
 
 import { useLineChartStore } from '../../_store/lineChartStore'
-import { useEffect, useRef, useState } from 'react';
-import { useIntersection } from '@mantine/hooks';
 
 const SessionsStyled = createSessionsStyled()
 
@@ -25,7 +27,9 @@ export default function Sessions(props) {
   }
 
   useEffect(() => {
-    entry?.isIntersecting && loadMore()
+    if (pagination.sessions.length < rawData.length) {
+      entry?.isIntersecting && loadMore()
+    }
   }, [entry])
 
   return (
@@ -47,21 +51,25 @@ export default function Sessions(props) {
           </thead>
           <tbody>
             {pagination.sessions.map((session, index) => {
-              const attrs = { key: index }
+              const attrs = {}
 
               if (index === pagination.sessions.length - 1) {
                 attrs.ref = ref
               }
 
+              const createdAt = dayjs(session.createdAt).format('D MMM')
+              const roundMs = Math.round((Date.parse(session.updatedAt) - Date.parse(session.createdAt)) / 1000) * 1000
+              const duration = prettyMilliseconds(roundMs)
+
               return (
-                <tr {...attrs}>
-                  <td>27 Mar</td>
-                  <td>dsadw4343sd</td>
-                  <td>Yes</td>
-                  <td>15 min</td>
+                <tr key={index} {...attrs}>
+                  <td>{createdAt}</td>
+                  <td>{session.uid}</td>
+                  <td>{session.newUser ? 'Yes' : 'No'}</td>
+                  <td>{duration}</td>
                   <td>Desktop</td>
-                  <td>Google</td>
-                  <td>9</td>
+                  <td>{session.referrer}</td>
+                  <td>{session.events.length}</td>
                   <td>Yes</td>
                 </tr>)
               }
@@ -117,6 +125,6 @@ function createSessionsStyled() {
 
 function createSliceData(rawData) {
   return function (page) {
-    return rawData.slice((page - 1) * 10, page * 10)
+    return rawData.slice((page - 1) * 15, page * 15)
   }
 }

@@ -13,13 +13,14 @@ const LineGraphStyled = createLineGraphStyled()
 
 export default react.memo(LineGraph)
 function LineGraph() {
-  const { viewBoxWidth, viewBoxHeight, dateArr, polyline } = useLineChartStore()
+  const { viewBoxWidth, viewBoxHeight, dateArr, polyline, polyline2 } = useLineChartStore()
 
   return (
     <LineGraphStyled viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}>
       <YaxisLabel/>
       <DateLabels dateArr={dateArr}/>
-      <polyline points={polyline} strokeWidth="1" fill='none'/>
+      <polyline className='polyline--matrix1' points={polyline} strokeWidth="1" fill='none'/>
+      <polyline className='polyline--matrix2' points={polyline2} strokeWidth="1" fill='none'/>
       <InsertData/>
     </LineGraphStyled>
   );
@@ -31,7 +32,7 @@ function createLineGraphStyled() {
     background-color: var(--bg-color);
     overflow: visible;
 
-    polyline, line {
+    line {
       stroke: var(--text-color);
     }
 
@@ -39,9 +40,15 @@ function createLineGraphStyled() {
       opacity: .5;
     }
 
+    polyline { stroke-width: 2 }
+    polyline.polyline--matrix1 { stroke: var(--matrix1-color) }
+    polyline.polyline--matrix2 { stroke: var(--matrix2-color) }
+
     circle {
-      fill: var(--text-color);
       opacity: 0;
+
+      &.matrix1 { fill: var(--matrix1-color) }
+      &.matrix2 { fill: var(--matrix2-color) }
     }
 
     .data-points {
@@ -54,8 +61,12 @@ function createLineGraphStyled() {
     }
 
     rect {
-      fill: var(--bg-color2);
       opacity: 0;
+    }
+
+    rect.label {
+      fill: var(--bg-color);
+      stroke: var(--text-color);
     }
 
     text {
@@ -63,7 +74,7 @@ function createLineGraphStyled() {
     }
 
     text.label {
-      fill: var(--bg-color);
+      fill: var(--text-color);
       opacity: 0;
 
       tspan:nth-child(1) {
@@ -71,7 +82,11 @@ function createLineGraphStyled() {
       }
 
       tspan:nth-child(2) {
-        font-weight: 700;
+        fill: var(--matrix1-color);
+      }
+
+      tspan:nth-child(3) {
+        fill: var(--matrix2-color);
       }
     }
   `

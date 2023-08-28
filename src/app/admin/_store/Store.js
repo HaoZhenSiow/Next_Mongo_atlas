@@ -19,6 +19,8 @@ export default function Store({ children }) {
 }
 
 function WaitForStateRehydration({ children }) {
-  const isRehydrated = AuthStore.useStoreRehydrated();
-  return isRehydrated ? children : null;
+  const isAuthStoreRehydrated = AuthStore.useStoreRehydrated(),
+        isLineChartStoreRehydrated = LineChartStore.useStoreRehydrated(),
+        condition = isAuthStoreRehydrated && isLineChartStoreRehydrated
+  return condition ? children : null;
 }

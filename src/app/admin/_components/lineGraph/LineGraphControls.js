@@ -11,7 +11,7 @@ const LineGraphControlsStyled = createLineGraphControlsStyled()
 
 export default function LineGraphControls() {
 
-  const { total, setSelectedField, selectedField } = useLineChartStore()
+  const { total, setSelectedField, selectedField, device, setDevice, browsers, browser, setBrowser, trafficSources, traffic, setTraffic, device2, setDevice2, browser2, setBrowser2, traffic2, setTraffic2 } = useLineChartStore()
 
   return (
     <LineGraphControlsStyled>
@@ -29,11 +29,53 @@ export default function LineGraphControls() {
             <option value="Session Conversion Rate">Session Conversion Rate</option>
             <option value="User Conversion Rate">User Conversion Rate</option>
           </select>
-          <p>{total}</p>
         </div>
-        
         <PeriodControl/>
         <XintervalControl/>
+      </div>
+      <div className="controls matrix1">
+        <p><b>Matrix 1</b></p>
+        <select value={device} onChange={e => setDevice(e.target.value)}>
+          <option value="All Devices" defaultValue>All Devices</option>
+          <option value="desktop">Desktop</option>
+          <option value="tablet">Tablet</option>
+          <option value="mobile">Mobile</option>
+        </select>
+        <select value={browser} onChange={e => setBrowser(e.target.value)}>
+          <option value="All Browsers" defaultValue>All Browsers</option>
+          {browsers.map(browser => (
+            <option key={browser} value={browser}>{browser}</option>
+          ))}
+        </select>
+        <select value={traffic} onChange={e => setTraffic(e.target.value)}>
+          <option value="all sources" defaultValue>All Sources</option>
+          {trafficSources.map(referrer => (
+            <option key={referrer} value={referrer}>{referrer}</option>
+          ))}
+        </select>
+        <p>{total}</p>
+      </div>
+      <div className="controls matrix2">
+        <p><b>Matrix 2</b></p>
+        <select value={device2} onChange={e => setDevice2(e.target.value)}>
+          <option value="All Devices" defaultValue>All Devices</option>
+          <option value="desktop">Desktop</option>
+          <option value="tablet">Tablet</option>
+          <option value="mobile">Mobile</option>
+        </select>
+        <select value={browser2} onChange={e => setBrowser2(e.target.value)}>
+          <option value="All Browsers" defaultValue>All Browsers</option>
+          {browsers.map(browser => (
+            <option key={browser} value={browser}>{browser}</option>
+          ))}
+        </select>
+        <select value={traffic2} onChange={e => setTraffic2(e.target.value)}>
+          <option value="all sources" defaultValue>All Sources</option>
+          {trafficSources.map(referrer => (
+            <option key={referrer} value={referrer}>{referrer}</option>
+          ))}
+        </select>
+        <p>{total}</p>
       </div>
       <LineGraph/>
     </LineGraphControlsStyled>
@@ -44,6 +86,7 @@ function createLineGraphControlsStyled() {
   return styled.div`
     .controls {
       display: flex;
+      gap: .5em;
       margin-bottom: 1em;
 
       select {
@@ -57,19 +100,16 @@ function createLineGraphControlsStyled() {
       .field {
         flex-grow: 1;
         display: flex;
+        gap: .5em;
 
         p {
-          margin-left: .5em;
           color: var(--text-color);
         }
       }
 
     }
-  `
-}
 
-function formatDate(fullDate) {
-  const day = String(fullDate.getDate()).padStart(2, '0')
-  const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(fullDate)
-  return day + ' ' + month
+    .matrix1 p { color: var(--matrix1-color); }
+    .matrix2 p { color: var(--matrix2-color); }
+  `
 }

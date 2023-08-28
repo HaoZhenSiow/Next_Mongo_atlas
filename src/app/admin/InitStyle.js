@@ -18,6 +18,8 @@ const InitStyle = createGlobalStyle`
   --bg-color: #565a61;
   --bg-color2: #333535;
   --text-color: #ffffff;
+  --matrix1-color: #97f5ff;
+  --matrix2-color: #c2ff97;
 }
 
 /* *:not(html, small, blockquote *)  {

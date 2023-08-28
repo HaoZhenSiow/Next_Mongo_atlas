@@ -1,3 +1,4 @@
+import Idbkv from 'idb-kv'
 import { str } from '../_lib/utils'
 import { createContextStore, action, persist, computed } from 'easy-peasy'
 
@@ -10,19 +11,53 @@ const LineChartStore = createContextStore(persist({
   startDate: new Date(),
   endDate: new Date(),
   Xinterval: 'day',
-  dataDisplayingMap: computed(setDataDisplayingMap),
+  page: 'All Pages',
+  device: 'All Devices',
+  browser: 'All Browsers',
+  traffic: 'all sources',
+  device2: 'All Devices',
+  browser2: 'All Browsers',
+  traffic2: 'all sources',
+  pages: computed(listPages),
+  browsers: computed(listBrowsers),
+  trafficSources: computed(listTrafficSources),
+  dataDisplayingMap: computed(setDataDisplayingMap1),
+  dataDisplayingMap2: computed(setDataDisplayingMap2),
   dataDisplayingType: computed(setDataType),
   medium: computed(defineMedium),
   dateArr: computed(createDateArr),
   dataPointDates: computed(getDataPointDates),
   dataAreas: computed(computeDataAreas),
-  total: computed(computeTotal),
-  polyline: computed(computePolyline),
+  total: computed(computeTotal1),
+  total2: computed(computeTotal2),
+  polyline: computed(computePolyline1),
+  polyline2: computed(computePolyline2),
   setSelectedField: action((state, payload) => {
     state.selectedField = payload
   }),
   setRawData: action((state, payload) => {
     state.rawData = payload
+  }),
+  setPage: action((state, payload) => {
+    state.page = payload
+  }),
+  setDevice: action((state, payload) => {
+    state.device = payload
+  }),
+  setBrowser: action((state, payload) => {
+    state.browser = payload
+  }),
+  setTraffic: action((state, payload) => {
+    state.traffic = payload
+  }),
+  setDevice2: action((state, payload) => {
+    state.device2 = payload
+  }),
+  setBrowser2: action((state, payload) => {
+    state.browser2 = payload
+  }),
+  setTraffic2: action((state, payload) => {
+    state.traffic2 = payload
   }),
   setPeriod: action((state, payload) => {
     state.period = payload
@@ -36,6 +71,10 @@ const LineChartStore = createContextStore(persist({
   setXinterval: action((state, payload) => {
     state.Xinterval = payload
   })
+}, {
+  name: 'LineChartStore',
+  allow: ['viewBoxWidth', 'viewBoxHeight', 'rawData', 'selectedField', 'period', 'startDate', 'endDate', 'Xinterval', 'page', 'device', 'browser', 'traffic'],
+  storage: myCustomStorage()
 }))
 
 export default LineChartStore;
@@ -44,6 +83,22 @@ export function useLineChartStore() {
   const states = LineChartStore.useStoreState(state => state),
         actions = LineChartStore.useStoreActions(actions => actions)
   return { ...states, ...actions }
+}
+
+function myCustomStorage() {
+  let store = new Idbkv('lineChartStore')
+  return {
+    async getItem(key) {
+      const data = await store.get(key)
+      return data || null
+    },
+    async setItem(key, value) {
+      store.set(key, value)
+    },
+    async removeItem(key) {
+      store.delete(key)
+    }
+  }
 }
 
 function createDateArr({ period }) {
@@ -110,14 +165,24 @@ function getDataPointDates({ dateArr, Xinterval }) {
   return visibleDates
 }
 
-function setDataDisplayingMap({ rawData, selectedField, dateArr, Xinterval }) {
+function setDataDisplayingMap1({ rawData, selectedField, device, browser, traffic, dateArr, Xinterval }) {
+  return setDataDisplayingMap(rawData, selectedField, device, browser, traffic, dateArr, Xinterval)
+}
+
+function setDataDisplayingMap2({ rawData, selectedField, device2, browser2, traffic2, dateArr, Xinterval }) {
+  return setDataDisplayingMap(rawData, selectedField, device2, browser2, traffic2, dateArr, Xinterval)
+}
+
+function setDataDisplayingMap(rawData, selectedField, device, browser, traffic, dateArr, Xinterval) {
   const filteredDateStrArr = dateArr.map(({ fullDate }) => str(fullDate)),
         filteredData = rawData.filter(({ createdAt }) => filteredDateStrArr.includes(str(createdAt))),
-        filteredDataInGroup = groupByXinterval(filteredData, filteredDateStrArr, Xinterval)
+        filteredDataByDevice = device !== 'All Devices' ? filteredData.filter(session => session.device === device) : filteredData,
+        filteredDataByBrowser = browser !== 'All Browsers' ? filteredDataByDevice.filter(session => session.browser === browser) : filteredDataByDevice,
+        filteredDataByTraffic = traffic !== 'all sources' ? filteredDataByBrowser.filter(({ referrer }) => referrer === traffic) : filteredDataByBrowser,
+        filteredDataInGroup = groupByXinterval(filteredDataByTraffic, filteredDateStrArr, Xinterval)
 
   let newMap = new Map()
 
-  // console.log('dataDisplayingMap:', dataDisplayingMap)
   switch (selectedField) {
     case 'Engaged Sessions':
       filteredDataInGroup.forEach((array, dateStr) => {
@@ -273,7 +338,15 @@ function computeDataAreas({ dataPointDates }) {
   return dataPointDates.length > 1 ? dataPointDates.length - 1 : 1
 }
 
-function computeTotal({ dataDisplayingMap, dataDisplayingType, dateArr }) {
+function computeTotal1({ dataDisplayingMap, dataDisplayingType, dateArr }) {
+  return computeTotal(dataDisplayingMap, dataDisplayingType, dateArr)
+}
+
+function computeTotal2({ dataDisplayingMap2, dataDisplayingType, dateArr }) {
+  return computeTotal(dataDisplayingMap2, dataDisplayingType, dateArr)
+}
+
+function computeTotal(dataDisplayingMap, dataDisplayingType, dateArr) {
   let total = 0
 
   dataDisplayingMap.forEach(val => {
@@ -288,7 +361,15 @@ function computeTotal({ dataDisplayingMap, dataDisplayingType, dateArr }) {
   return total
 }
 
-function computePolyline({ viewBoxWidth, viewBoxHeight, dataDisplayingMap, dateArr, dataPointDates, medium }) {
+function computePolyline1({ viewBoxWidth, viewBoxHeight, dataDisplayingMap, dateArr, dataPointDates, medium }) {
+  return computePolyline(viewBoxWidth, viewBoxHeight, dataDisplayingMap, dateArr, dataPointDates, medium)
+}
+
+function computePolyline2({ viewBoxWidth, viewBoxHeight, dataDisplayingMap2, dateArr, dataPointDates, medium }) {
+  return computePolyline(viewBoxWidth, viewBoxHeight, dataDisplayingMap2, dateArr, dataPointDates, medium)
+}
+
+function computePolyline(viewBoxWidth, viewBoxHeight, dataDisplayingMap, dateArr, dataPointDates, medium) {
   let polyline = ''
 
   dateArr.forEach((date, index) => {
@@ -306,9 +387,13 @@ function computePolyline({ viewBoxWidth, viewBoxHeight, dataDisplayingMap, dateA
   return polyline
 }
 
-function defineMedium({ dataDisplayingMap, dataDisplayingType }) {
-  const valArr = Array.from(dataDisplayingMap.values()),
-        highest = Math.max(...valArr),
+function defineMedium({ dataDisplayingMap, dataDisplayingMap2, dataDisplayingType }) {
+  const valArr1 = Array.from(dataDisplayingMap.values()),
+        valArr2 = Array.from(dataDisplayingMap2.values()),
+        highest1 = Math.max(...valArr1),
+        highest2 = Math.max(...valArr2),
+        valArr = highest1 > highest2 ? valArr1 : valArr2,
+        highest = highest1 > highest2 ? highest1 : highest2,
         newHighest = highest % 2 ? highest + 1 : highest,
         sum = valArr.reduce((acc, value) => acc + value, 0),
         average = sum / valArr.length,
@@ -338,4 +423,21 @@ function defineMedium({ dataDisplayingMap, dataDisplayingType }) {
       break
   }
   return { value, unit, unitVal, sum }
+}
+
+function listPages({ rawData }) {
+  const events = rawData.flatMap(session => (session.events)),
+        pageViews = events.filter(event => event.type === 'pageView'),
+        pages = new Set(pageViews.map(pageView => (pageView.event)))
+  return [...pages].sort()
+}
+
+function listBrowsers({ rawData }) {
+  const filter = new Set(rawData.map(session => (session.browser)))
+  return [...filter]
+}
+
+function listTrafficSources({ rawData }) {
+  const filter = new Set(rawData.map(session => (session.referrer)))
+  return [...filter]
 }

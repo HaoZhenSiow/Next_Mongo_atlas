@@ -1,32 +1,71 @@
-import { str } from "./utils"
-
-export function generateFakeData(dateStr, period) {
-  const fakeData = new Map();
-
-  const startDate = new Date(dateStr);
-  for (let i = 0; i < period; i++) {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(startDate.getDate() - i);
-    const randomSessions = Math.floor(Math.random() * 150); // Generate random session count
-    fakeData.set(str(currentDate), randomSessions);
+const devices = [
+  {
+    device: "desktop",
+    resolution: "1920 x 1080"
+  },
+  {
+    device: "desktop",
+    resolution: "1366 x 768"
+  },
+  {
+    device: "desktop",
+    resolution: "1280 x 720"
+  },
+  {
+    device: "tablet",
+    resolution: "768 x 1024"
+  },
+  {
+    device: "tablet",
+    resolution: "600 x 1024"
+  },
+  {
+    device: "tablet",
+    resolution: "480 x 800"
+  },
+  {
+    device: "mobile",
+    resolution: "360 x 640"
+  },
+  {
+    device: "mobile",
+    resolution: "320 x 568"
+  },
+  {
+    device: "mobile",
+    resolution: "375 x 667"
   }
+]
 
-  return fakeData
-}
+const browsers = ["Chrome", "Firefox", "Safari", "Edge", "Opera"]
 
-export function generateFakePercentageData(dateStr, period) {
-  const fakeData = new Map();
+// export function generateFakeData(dateStr, period) {
+//   const fakeData = new Map();
 
-  const startDate = new Date(dateStr);
-  for (let i = 0; i < period; i++) {
-    const currentDate = new Date(startDate);
-    currentDate.setDate(startDate.getDate() - i);
-    const randomSessions = Math.floor(Math.random() * 100); // Generate random session count
-    fakeData.set(str(currentDate), randomSessions);
-  }
+//   const startDate = new Date(dateStr);
+//   for (let i = 0; i < period; i++) {
+//     const currentDate = new Date(startDate);
+//     currentDate.setDate(startDate.getDate() - i);
+//     const randomSessions = Math.floor(Math.random() * 150); // Generate random session count
+//     fakeData.set(str(currentDate), randomSessions);
+//   }
 
-  return fakeData
-}
+//   return fakeData
+// }
+
+// export function generateFakePercentageData(dateStr, period) {
+//   const fakeData = new Map();
+
+//   const startDate = new Date(dateStr);
+//   for (let i = 0; i < period; i++) {
+//     const currentDate = new Date(startDate);
+//     currentDate.setDate(startDate.getDate() - i);
+//     const randomSessions = Math.floor(Math.random() * 100); // Generate random session count
+//     fakeData.set(str(currentDate), randomSessions);
+//   }
+
+//   return fakeData
+// }
 
 export function fakeSessionsGenerator(period) {
 
@@ -51,6 +90,12 @@ export function fakeSessionsGenerator(period) {
     date.setDate(currentDate.getDate() - i)
     const sessionPerDay = sessionCounts[i]
 
+
+    const random = Math.trunc(Math.random() * 9),
+          random2 = Math.trunc(Math.random() * 5),
+          device = devices[random],
+          browser = browsers[random2]
+
     for (let j = 0; j < sessionPerDay; j++) {
 
       const newUser = newUsers.shift(),
@@ -65,9 +110,11 @@ export function fakeSessionsGenerator(period) {
         eventsPerSession = Math.random() > 0.2 ? eventsPerSession : 1
       }
 
-      const { eventsDetails, sessionTime } = generateEvents(eventsPerSession)
+      const { eventsDetails, sessionTime } = generateEvents(eventsPerSession, device, browser)
 
       sessions.push({
+        ...device,
+        browser,
         createdAt: date.toISOString(),
         uid,
         newUser,
@@ -83,7 +130,7 @@ export function fakeSessionsGenerator(period) {
   return sessions
 }
 
-function generateEvents(number) {
+function generateEvents(number, device, browser) {
   const pagesSet1 = ['pageA-version1', 'pageB', 'pageC', 'pageD', 'pageE'],
         pagesSet2 = ['pageA-version2', 'pageB', 'pageC', 'pageD', 'pageE'],
         pagesSet = Math.random() > 0.5 ? pagesSet1 : pagesSet2,
@@ -110,7 +157,7 @@ function generateEvents(number) {
         break
     }
 
-    return { type, event, duration }
+    return { ...device, type, event, duration, browser }
   })
 
   sessionTime += eventsDetails.reduce((acc, val) => acc + val.duration, 0)

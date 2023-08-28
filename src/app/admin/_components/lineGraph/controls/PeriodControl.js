@@ -102,7 +102,6 @@ export default function PeriodControl(props) {
 
 function createPeriodControlStyled() {
   return styled.div`
-    margin-right: .5em;
     position: relative;
 
     & > div:first-child {

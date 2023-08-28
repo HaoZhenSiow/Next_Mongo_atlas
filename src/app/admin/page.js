@@ -5,6 +5,7 @@ import { fakeSessionsGenerator } from './_lib/fakeData'
 import { useLineChartStore } from './_store/lineChartStore'
 
 import LineGraphControls from "./_components/lineGraph/LineGraphControls"
+import PageGraphControls from './_components/pageGraph/PageGraphControl'
 import Sessions from './_components/sessions/Sessions'
 
 const Dashboard = createDashboard()
@@ -19,6 +20,7 @@ export default function Home() {
   return (
     <Dashboard className="container">
       <LineGraphControls/>
+      <PageGraphControls/>
       <Sessions/>
     </Dashboard> 
   )
