@@ -9,9 +9,9 @@ export default function XintervalControl() {
   return (
     <XintervalStyled>
       <select value={Xinterval} onChange={e => setXinterval(e.target.value)}>
-        <option value="day">day</option>
-        <option value="week">week</option>
-        <option value="month">month</option>]
+        <option value="day">daily</option>
+        <option value="week">weekly</option>
+        <option value="month">monthly</option>]
       </select>
     </XintervalStyled>
   )

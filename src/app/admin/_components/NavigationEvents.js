@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import recordEvent from '../_lib/recordEvent'
 import { getBrowser } from '../_lib/recordEvent'
 import Cookies from 'js-cookie'
+const unload = require('unload')
 
 export default function NavigationEvents() {
   const pathName = usePathname(),
@@ -22,25 +23,21 @@ export default function NavigationEvents() {
   }
   
   useEffect(() => {
-    const leaveSite = createLeaveStie(recordPath)
 
-    if (browser === 'Firefox' || browser === 'Brave' || browser === 'Tor Browser') {
-      window.addEventListener('beforeunload', leaveSite)
+    const duckduckgoEvent = async () => {
+      await recordEvent(recordPath, 'pageView')
+      await recordEvent(recordPath, 'leaveSite')
+    }
+
+    if (browser === 'DuckDuckGo') {
+      duckduckgoEvent()
     } else {
-      window.addEventListener('unload', leaveSite)
+      recordEvent(recordPath, 'pageView')
     }
-    
-    recordEvent(recordPath, 'pageView')
 
-    return () => {
-      window.removeEventListener('beforeunload', leaveSite)
-      window.removeEventListener('unload', leaveSite)
-    }
+    unload.add(() => recordEvent(recordPath, 'leaveSite'))
+
   }, [pathName])
 
   return null
-}
-
-function createLeaveStie(pathName) {
-  return () => recordEvent(pathName, 'leaveSite')
 }

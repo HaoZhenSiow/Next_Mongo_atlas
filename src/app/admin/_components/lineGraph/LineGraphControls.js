@@ -9,12 +9,13 @@ import PeriodControl from './controls/PeriodControl';
 
 const LineGraphControlsStyled = createLineGraphControlsStyled()
 
-export default function LineGraphControls() {
+export default function LineGraphControls({ className }) {
 
-  const { total, setSelectedField, selectedField, device, setDevice, browsers, browser, setBrowser, trafficSources, traffic, setTraffic, device2, setDevice2, browser2, setBrowser2, traffic2, setTraffic2 } = useLineChartStore()
+  const { total, setSelectedField, selectedField, device, setDevice, browsers, browser, setBrowser, trafficSources, traffic, setTraffic, device2, setDevice2, browser2, setBrowser2, traffic2, setTraffic2, total2 } = useLineChartStore()
 
   return (
-    <LineGraphControlsStyled>
+    <LineGraphControlsStyled className={className}>
+      <h2>Overview</h2>
       <div className="controls">
         <div className="field">
           <select value={selectedField} onChange={e => setSelectedField(e.target.value)}>
@@ -33,8 +34,9 @@ export default function LineGraphControls() {
         <PeriodControl/>
         <XintervalControl/>
       </div>
+      <LineGraph/>
       <div className="controls matrix1">
-        <p><b>Matrix 1</b></p>
+        <p>Matrix 1</p>
         <select value={device} onChange={e => setDevice(e.target.value)}>
           <option value="All Devices" defaultValue>All Devices</option>
           <option value="desktop">Desktop</option>
@@ -53,10 +55,10 @@ export default function LineGraphControls() {
             <option key={referrer} value={referrer}>{referrer}</option>
           ))}
         </select>
-        <p>{total}</p>
+        <p><b>{total}</b></p>
       </div>
       <div className="controls matrix2">
-        <p><b>Matrix 2</b></p>
+        <p>Matrix 2</p>
         <select value={device2} onChange={e => setDevice2(e.target.value)}>
           <option value="All Devices" defaultValue>All Devices</option>
           <option value="desktop">Desktop</option>
@@ -75,38 +77,20 @@ export default function LineGraphControls() {
             <option key={referrer} value={referrer}>{referrer}</option>
           ))}
         </select>
-        <p>{total}</p>
+        <p><b>{total2}</b></p>
       </div>
-      <LineGraph/>
     </LineGraphControlsStyled>
   );
 }
 
 function createLineGraphControlsStyled() {
   return styled.div`
-    .controls {
-      display: flex;
-      gap: .5em;
-      margin-bottom: 1em;
+    .field {
+      flex-grow: 1;
+    }
 
-      select {
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-size: .9em;
-        border: 1px solid var(--text-color);
-        border-radius: 5px;
-      }
-
-      .field {
-        flex-grow: 1;
-        display: flex;
-        gap: .5em;
-
-        p {
-          color: var(--text-color);
-        }
-      }
-
+    .matrix1 {
+      margin-top: 2em;
     }
 
     .matrix1 p { color: var(--matrix1-color); }

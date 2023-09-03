@@ -2,7 +2,7 @@ import Bowser from "bowser"
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-export default function recordEvent(event, type = 'event') {
+export default async function recordEvent(event, type = 'event') {
   const browser = getBrowser(),
         referrer = getReferrer(),
         payload = {
@@ -18,7 +18,7 @@ export default function recordEvent(event, type = 'event') {
                     browser !== 'Electron' && 
                     browser !== 'Vercelbot'
 
-  condition && axios.post('/admin/api/events', payload)
+  condition && await axios.post('/admin/api/events', payload)
 }
 
 export function getBrowser() {

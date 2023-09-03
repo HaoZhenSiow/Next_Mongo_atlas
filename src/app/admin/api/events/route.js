@@ -12,7 +12,7 @@ export async function POST(req) {
         ip = process.env.DEV_MODE ? 'dev mode' : getHashIp(req),
         uid = await getUID(req)
 
-  process.env.DEV_MODE && console.log(chalk.bgGreen(eventDetails.event, eventDetails.type))
+  process.env.DEV_MODE && console.log(chalk.bgGreen(eventDetails.event, eventDetails.type, req.headers.get('x-forwarded-for')))
   
   const sessionDetails = {
     ip,
@@ -78,18 +78,17 @@ async function continueSession(session, eventDetails) {
   try {
     let prevEvent = session.events.at(-1)
 
+    if (prevEvent.type === 'leaveSite') {
+      session.events.pop()
+      prevEvent = session.events.at(-1)
+    }
+
     const isLeaveSite = eventDetails.type === 'leaveSite',
           isPageView = eventDetails.type === 'pageView',
           isSameEvent = prevEvent.event === eventDetails.event,
           isSameDevice = prevEvent.device === eventDetails.device,
           isPageRefresh = isPageView && isSameEvent && isSameDevice && !isLeaveSite,
           isNotSameDevice = prevEvent.device !== eventDetails.device
-
-    if (prevEvent.type === 'leaveSite') {
-      session.events.pop()
-      await session.save()
-      prevEvent = session.events.at(-1)
-    }
 
     // do nothing when user refresh page
     if (isPageRefresh) return res('refresh page', 200)

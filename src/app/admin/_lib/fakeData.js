@@ -90,17 +90,16 @@ export function fakeSessionsGenerator(period) {
     date.setDate(currentDate.getDate() - i)
     const sessionPerDay = sessionCounts[i]
 
-
-    const random = Math.trunc(Math.random() * 9),
-          random2 = Math.trunc(Math.random() * 5),
-          device = devices[random],
-          browser = browsers[random2]
-
     for (let j = 0; j < sessionPerDay; j++) {
 
       const newUser = newUsers.shift(),
             referrer = referrers.shift(),
             uid = newUser ? Math.random().toString(36).substring(2, 9) : getRandomItemFromArray(sessions).uid
+
+      const random = Math.trunc(Math.random() * 9),
+            random2 = Math.trunc(Math.random() * 5),
+            device = devices[random],
+            browser = browsers[random2]
         
       let eventsPerSession = eventsPerSessionArr.shift()
 
@@ -159,6 +158,18 @@ function generateEvents(number, device, browser) {
 
     return { ...device, type, event, duration, browser }
   })
+
+  const convert = Math.random() > 0.6
+
+  if (eventsDetails.length > 5 && convert) {
+    eventsDetails.splice(-1, 0, {
+      ...device,
+      type: 'conversion',
+      event: 'submit form',
+      duration: Math.floor(Math.random() * 1000 * 15),
+      browser
+    })
+  }
 
   sessionTime += eventsDetails.reduce((acc, val) => acc + val.duration, 0)
   return { eventsDetails, sessionTime }
