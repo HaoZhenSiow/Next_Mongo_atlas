@@ -1,6 +1,7 @@
 'use client'
 import AuthStore from "./authStore"
 import LineChartStore from "./lineChartStore"
+import PagesStatisticStore from "./pagesStatisticStore"
 import DataStore from "./dataStore"
 
 export default function Store({ children }) {
@@ -9,9 +10,11 @@ export default function Store({ children }) {
     <AuthStore.Provider>
       <DataStore.Provider>
         <LineChartStore.Provider>
-          <WaitForStateRehydration>
+          <PagesStatisticStore.Provider>
+            <WaitForStateRehydration>
               {children}
-          </WaitForStateRehydration>
+            </WaitForStateRehydration>
+          </PagesStatisticStore.Provider>
         </LineChartStore.Provider>
       </DataStore.Provider>
     </AuthStore.Provider>
@@ -21,6 +24,7 @@ export default function Store({ children }) {
 function WaitForStateRehydration({ children }) {
   const isAuthStoreRehydrated = AuthStore.useStoreRehydrated(),
         isLineChartStoreRehydrated = LineChartStore.useStoreRehydrated(),
-        condition = isAuthStoreRehydrated && isLineChartStoreRehydrated
+        isPagesStatisticStoreRehydrated = PagesStatisticStore.useStoreRehydrated(),
+        condition = isAuthStoreRehydrated && isLineChartStoreRehydrated && isPagesStatisticStoreRehydrated
   return condition ? children : null;
 }

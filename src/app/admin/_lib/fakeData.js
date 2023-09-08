@@ -137,7 +137,7 @@ function generateEvents(number, device, browser) {
         eventOutcomeRation = [1,1,1,1,1,1,1,1],
         events = generateRandomOutcome(PossibleEvents, eventOutcomeRation, number, true)
 
-  let sessionTime = 0
+  let page = ''
 
   const eventsDetails = [...events, 'leaveSite'].map(event => {
     const timeRange = events.length < 2 ?
@@ -150,13 +150,14 @@ function generateEvents(number, device, browser) {
     switch (true) {
       case Boolean(event.startsWith('page')):
         type = 'pageView'
+        page = event
         break
       case Boolean(event.startsWith('event')):
         type = 'event'
         break
     }
 
-    return { ...device, type, event, duration, browser }
+    return { ...device, type, event, duration, browser, page }
   })
 
   const convert = Math.random() > 0.6
@@ -167,9 +168,12 @@ function generateEvents(number, device, browser) {
       type: 'conversion',
       event: 'submit form',
       duration: Math.floor(Math.random() * 1000 * 15),
-      browser
+      browser,
+      page
     })
   }
+
+  let sessionTime = 0
 
   sessionTime += eventsDetails.reduce((acc, val) => acc + val.duration, 0)
   return { eventsDetails, sessionTime }

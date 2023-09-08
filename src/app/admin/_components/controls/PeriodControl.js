@@ -1,15 +1,21 @@
 import styled from 'styled-components'
-import { useEffect, useState  } from 'react';
+import { useState, memo  } from 'react';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangePicker } from 'react-date-range';
-
-import { useLineChartStore } from '@/app/admin/_store/lineChartStore';
+import dayjs from 'dayjs'
+import advancedFormat from 'dayjs/plugin/advancedFormat'
+dayjs.extend(advancedFormat)
+import { useClickOutside } from '@mantine/hooks'
 
 const PeriodControlStyled = createPeriodControlStyled()
 
-export default function PeriodControl(props) {
-  const { period, startDate, endDate, setPeriod, setStartDate, setEndDate } = useLineChartStore()
+export default memo(PeriodControl)
+
+function PeriodControl({ store }) {
+  const { period, startDate, endDate, setPeriod, setStartDate, setEndDate } = store()
+
+  const customDateRange = period.startDate && dayjs(period.startDate).format('Do MMM') + ' - ' + dayjs(period.endDate).format('Do MMM')
 
   const [showSelectionRange, setShowSelectionRange] = useState(false),
         initDateRage = {startDate: new Date(), endDate: new Date()},
@@ -21,12 +27,10 @@ export default function PeriodControl(props) {
         }
 
   const handlePeriodChange = (event) => {
-    if (event.target.value === 'custom') {
-      setShowSelectionRange(true)
-    } else {
-      setPeriod(event.target.value);
-    }
-  };
+    const isNotCustom = event.target.value !== 'custom'
+    if (isNotCustom) return setPeriod(event.target.value)
+    setShowSelectionRange(true)
+  }
 
   const handleSelectionRange = event => {
     setDateRange({
@@ -47,33 +51,14 @@ export default function PeriodControl(props) {
     setShowSelectionRange(false)
   }
 
-  useEffect(() => {
-    if (showSelectionRange) {
-      setTimeout(() => {
-        window.addEventListener('click', clickEvent)
-      }, 1)
-      
-    }
-
-    function clickEvent(e) {
-      const div = document.getElementById('rangeDateSelector')
-      const isDiv = div.contains(e.target)
-      if (!isDiv) {
-        handleCancelSelection()
-      }
-    }
-
-    return () => {
-      window.removeEventListener('click', clickEvent)
-    }
-  }, [showSelectionRange, handleCancelSelection])
+  const dateRangeSelectorRef = useClickOutside(handleCancelSelection)
 
   return (
     <PeriodControlStyled>
-      <div id="rangeDateSelector">
+      <div id="rangeDateSelector" ref={dateRangeSelectorRef}>
         {showSelectionRange && (
         <>
-          <DateRangePicker 
+          <DateRangePicker
             ranges={[selectionRange]}
             onChange={handleSelectionRange}
             moveRangeOnFirstSelection={true}
@@ -91,9 +76,7 @@ export default function PeriodControl(props) {
         <option value="Last 28 days">Last 28 days</option>
         <option value="Last 90 days">Last 90 days</option>
         <option value="Last 12 months">Last 12 months</option>
-        <option value={period} hidden>
-          {period.startDate ? `${formatDate(period.startDate)} - ${formatDate(period.endDate)}` : period}
-        </option>
+        {period.startDate && <option value={period}>{customDateRange}</option>}
         <option value="custom">custom</option>
       </select>
     </PeriodControlStyled>
@@ -104,10 +87,11 @@ function createPeriodControlStyled() {
   return styled.div`
     position: relative;
 
-    & > div:first-child {
+    #rangeDateSelector {
       position: absolute;
       top: 0;
-      left: 0;
+      right: 0;
+      z-index: 99;
 
       .rdrDefinedRangesWrapper {
         display: none;

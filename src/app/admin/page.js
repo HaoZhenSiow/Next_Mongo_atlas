@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { fakeSessionsGenerator } from './_lib/fakeData'
 
 import { useLineChartStore } from './_store/lineChartStore'
+import { usePagesStatisticStore } from './_store/pagesStatisticStore'
 
 import LineGraphControls from "./_components/lineGraph/LineGraphControls"
 import PageGraphControls from './_components/pageGraph/PageGraphControl'
@@ -13,11 +14,18 @@ import PathExplorationSnippet from './_components/pathExploration/PathExploratio
 
 const Dashboard = createDashboard()
 
-export default function Home() {
-  const { rawData, setRawData } = useLineChartStore()
+const fakseSessions = fakeSessionsGenerator(365)
 
-  if (rawData.length < 1) {
-    setRawData(fakeSessionsGenerator(365))
+export default function Home() {
+  const lineChart = useLineChartStore(),
+        pagesStats = usePagesStatisticStore()
+
+  if (lineChart.rawData.length < 1) {
+    lineChart.setRawData(fakseSessions)
+  }
+
+  if (pagesStats.rawData.length < 1) {
+    pagesStats.setRawData(fakseSessions)
   }
   
   return (

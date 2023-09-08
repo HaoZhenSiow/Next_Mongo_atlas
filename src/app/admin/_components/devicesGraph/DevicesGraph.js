@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import PeriodControl from '../lineGraph/controls/PeriodControl';
+import PeriodControl from '../controls/PeriodControl';
 
 const DevicesGraphStyled = createDevicesGraphStyled()
 
@@ -19,7 +19,7 @@ export default function DevicesGraph(props) {
             <option value="Browser">Browser</option>
             <option value="Screen Resolution">Screen Resolution</option>
         </select>
-        <PeriodControl/>
+        {/* <PeriodControl/> */}
       </div>
     </DevicesGraphStyled>
   );

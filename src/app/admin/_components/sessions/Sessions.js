@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import _ from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 import { useIntersection } from '@mantine/hooks'
 import prettyMilliseconds from 'pretty-ms'
@@ -10,10 +11,19 @@ import Table from '../Table'
 
 const SessionsStyled = createSessionsStyled()
 
+const table_headers = ['Date', 'Session ID', 'New User', 'Duration', 'Device Type', 'Source', 'Events', 'Conversion']
+
 export default function Sessions(props) {
   const { rawData } = useLineChartStore()
+  const dataInChunks = _.chunk(sortRawDataByDescUpdateAt(rawData), 15)
+  const [pagination, setPagination] = useState({ sessions: dataInChunks[0], page: 1 })
 
-  const headers = ['Date', 'Session ID', 'New User', 'Duration', 'Device Type', 'Source', 'Events', 'Conversion']
+  const loadMore = () => {
+    setPagination(prev => ({ 
+      sessions: [...prev.sessions, ...dataInChunks[prev.page]],
+      page: prev.page + 1 
+    }))
+  }
 
   const lastSessionRef = useRef(null)
 
@@ -22,17 +32,6 @@ export default function Sessions(props) {
     threshold: 1
   })
 
-  const GetPaginatedData = createGetPaginatedData(sortRawDataByDescUpdateAt(rawData))
-
-  const [pagination, setPagination] = useState({ sessions: GetPaginatedData(1), page: 1 })
-
-  const loadMore = () => {
-    setPagination(prev => ({ 
-      sessions: [...prev.sessions, ...GetPaginatedData(prev.page + 1)],
-      page: prev.page + 1 
-    }))
-  }
-
   useEffect(() => {
     if (pagination.sessions.length < rawData.length) {
       entry?.isIntersecting && loadMore()
@@ -40,10 +39,10 @@ export default function Sessions(props) {
   }, [entry])
 
   return (
-    <SessionsStyled className={props.className}>
+    <SessionsStyled className={props.className} ref={lastSessionRef}>
       <h2>Sessions</h2>
       <div className='sessions__table'>
-        <Table headers={headers}>
+        <Table headers={table_headers}>
           {pagination.sessions.map((session, index) => {
             const attrs = {}
 
@@ -95,12 +94,6 @@ function createSessionsStyled() {
       cursor: pointer;
     } */
   `
-}
-
-function createGetPaginatedData(rawData) {
-  return function (page) {
-    return rawData.slice((page - 1) * 15, page * 15)
-  }
 }
 
 function sortRawDataByDescUpdateAt(rawData) {

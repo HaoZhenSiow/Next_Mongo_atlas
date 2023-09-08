@@ -1,6 +1,6 @@
-import Idbkv from 'idb-kv'
 import { str } from '../_lib/utils'
 import { createContextStore, action, persist, computed } from 'easy-peasy'
+import myCustomStorage from './myCustomStorage'
 
 const LineChartStore = createContextStore(persist({
   viewBoxWidth: 1000,
@@ -74,7 +74,7 @@ const LineChartStore = createContextStore(persist({
 }, {
   name: 'LineChartStore',
   allow: ['viewBoxWidth', 'viewBoxHeight', 'rawData', 'selectedField', 'period', 'startDate', 'endDate', 'Xinterval', 'page', 'device', 'browser', 'traffic'],
-  storage: myCustomStorage()
+  storage: myCustomStorage('lineChartStore')
 }))
 
 export default LineChartStore;
@@ -83,22 +83,6 @@ export function useLineChartStore() {
   const states = LineChartStore.useStoreState(state => state),
         actions = LineChartStore.useStoreActions(actions => actions)
   return { ...states, ...actions }
-}
-
-function myCustomStorage() {
-  let store = new Idbkv('lineChartStore')
-  return {
-    async getItem(key) {
-      const data = await store.get(key)
-      return data || null
-    },
-    async setItem(key, value) {
-      store.set(key, value)
-    },
-    async removeItem(key) {
-      store.delete(key)
-    }
-  }
 }
 
 function createDateArr({ period }) {
@@ -144,7 +128,7 @@ function createDateArr({ period }) {
 function setDataType({ selectedField }) {
   const number = ['Sessions', 'Engaged Sessions', 'Engaged Sessions Per User', 'Total Users', 'New Users', 'Returning Users', 'Conversions']
 
-  const percentage = ['Bounce Rate', 'Engagement Rate', 'Session Conversion Rate', 'User Conversion Rate']
+  const percentage = ['Bounce Rate', 'Engagement Rate', 'Session Conversion Rate']
 
   return number.includes(selectedField) ? 'number' : percentage.includes(selectedField) ? 'percentage' : 'number'
 }
@@ -284,6 +268,32 @@ function setDataDisplayingMap(rawData, selectedField, device, browser, traffic, 
         })
         
         newMap.set(dateStr, users - newArr.length)
+      })
+
+      return newMap
+
+    case 'Conversions':
+      filteredDataInGroup.forEach((array, dateStr) => {
+        const conversions = array.filter(session => {
+          return session.events.some(event => {
+            return event.type === 'conversion'
+          })
+        })
+
+        newMap.set(dateStr, conversions.length)
+      })
+
+      return newMap
+
+    case 'Session Conversion Rate':
+      filteredDataInGroup.forEach((array, dateStr) => {
+        const sessions = array.length
+        const conversions = array.filter(session => {
+          return session.events.some(event => {
+            return event.type === 'conversion'
+          })
+        })
+        newMap.set(dateStr, parseFloat((conversions.length/sessions*100).toFixed(2)))
       })
 
       return newMap

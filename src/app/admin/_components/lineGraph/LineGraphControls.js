@@ -5,7 +5,7 @@ import LineGraph from './LineGraph';
 import { useLineChartStore } from '../../_store/lineChartStore';
 
 import XintervalControl from './controls/XintervalControl';
-import PeriodControl from './controls/PeriodControl';
+import PeriodControl from '../controls/PeriodControl';
 
 const LineGraphControlsStyled = createLineGraphControlsStyled()
 
@@ -28,10 +28,9 @@ export default function LineGraphControls({ className }) {
             <option value="Returning Users">Returning Users</option>
             <option value="Conversions">Conversions</option>
             <option value="Session Conversion Rate">Session Conversion Rate</option>
-            <option value="User Conversion Rate">User Conversion Rate</option>
           </select>
         </div>
-        <PeriodControl/>
+        <PeriodControl store={useLineChartStore}/>
         <XintervalControl/>
       </div>
       <LineGraph/>
