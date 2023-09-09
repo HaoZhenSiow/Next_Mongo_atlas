@@ -1,10 +1,9 @@
 import mongoose from "mongoose"
-import connectDB from "../../_mongoDB/connectDB"
+import connectDB from "../../_db/adminDB"
 import { res, genToken, decodeToken, getHashIp } from "../../_lib/utils"
 import chalk from "chalk"
 
-const conn = connectDB(),
-      sessionModel = conn.model('session')
+const {conn, sessionModel, waitForConnection} = connectDB()
 
 export async function POST(req) {
   
@@ -147,19 +146,19 @@ async function returnUIDtoken(uid, message) {
   return response
 }
 
-async function waitForConnection() {
-  // 0 = disconnected, 1 = connected, 2 = connecting
-  if (conn['_readyState'] === 2) {
-    await new Promise((resolve) => {
-      const checkConnectionStatus = setInterval(() => {
-        if (conn['_readyState'] === 1 || conn['_readyState'] === 0) {
-          clearInterval(checkConnectionStatus)
-          resolve()
-        }
-      }, 100) // Adjust the interval as needed
-    })
-  }
-}
+// async function waitForConnection() {
+//   // 0 = disconnected, 1 = connected, 2 = connecting
+//   if (conn['_readyState'] === 2) {
+//     await new Promise((resolve) => {
+//       const checkConnectionStatus = setInterval(() => {
+//         if (conn['_readyState'] === 1 || conn['_readyState'] === 0) {
+//           clearInterval(checkConnectionStatus)
+//           resolve()
+//         }
+//       }, 100) // Adjust the interval as needed
+//     })
+//   }
+// }
 
 async function getUID(req) {
   const uidToken = req.cookies.get('uidToken')

@@ -1,14 +1,15 @@
-import connectDB from "../../_mongoDB/connectDB";
+import connectDB from "../../_db/adminDB";
 import bcrypt from "bcrypt"
 import { genToken } from "../../_lib/utils";
 import { res } from "../../_lib/utils";
 
-const conn = connectDB(),
-      adminModel = conn.model('admin')
+const {adminModel, waitForConnection} = connectDB()
 
 
 export async function POST(req) {
   const { request = '', username = '', password = '' } = await req.json()
+
+  await waitForConnection()
   
   switch (request) {
     case "login":

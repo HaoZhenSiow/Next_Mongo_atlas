@@ -1,4 +1,4 @@
-import connectDB from "../../_mongoDB/connectDB";
+import connectDB from "../../_db/adminDB";
 import { res } from "../../_lib/utils";
 import chalk from "chalk";
 

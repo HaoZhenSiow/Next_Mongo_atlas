@@ -1,21 +1,21 @@
 require('dotenv').config()
 import mongoose, { Schema } from 'mongoose'
+import setupMongoDB from 'setup-mongodb'
+
+const uri = process.env.ADMIN_URI
 
 const eventSchema = createEventSchema(),
       sessionSchema = createSessionSchema(),
       adminSchema = createAdminSchema()
 
-export default function connectDB() {
-  let conn = findConnection()
-  
-  if (!conn) {
-    conn = mongoose.createConnection(process.env.ADMIN_URI)
-    conn.model('session', sessionSchema)
-    conn.model('admin', adminSchema)
-  }
-
-  return conn
+const schemas = {
+  admin: adminSchema,
+  session: sessionSchema
 }
+
+const connectDB = setupMongoDB(uri, schemas)
+
+export default connectDB
 
 function createEventSchema() {
   return new Schema({
@@ -88,8 +88,4 @@ function createAdminSchema() {
       required: true
     }
   }, { timestamps: true })
-}
-
-function findConnection() {
-  return mongoose.connections.find((conn) => conn.name === process.env.ADMIN_DBNAME)
 }
