@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { fakeSessionsGenerator } from './_lib/fakeData'
 
@@ -14,35 +15,31 @@ import DevicesGraph from './_components/devicesGraph/DevicesGraph'
 import Sessions from './_components/sessions/Sessions'
 import PathExplorationSnippet from './_components/pathExploration/PathExplorationSnippet'
 
+
 const Dashboard = createDashboard()
 
 const fakseSessions = fakeSessionsGenerator(365)
 
 export default function Home() {
-  const dataStore = useDataStore(),
-        lineChartStore = useLineChartStore(),
-        pageStatisticStore = usePagesStatisticStore(),
-        trafficSourceStatisticStore = useTrafficSourceStatisticStore()
+  const dataStore = useDataStore()
   
   if (dataStore.rawData.length < 1) {
     dataStore.setRawData(fakseSessions)
   }
-
-  lineChartStore.setRawData(dataStore.rawData)
-  pageStatisticStore.setRawData(dataStore.rawData)
-  trafficSourceStatisticStore.setRawData(dataStore.rawData)
   
   return (
-    <Dashboard className="container">
-      <LineGraphControls className="snippet"/>
-      <PageGraphControls className="snippet"/>
-      <div className="snippets">
-        <TrafficSource className="snippet"/>
-        <DevicesGraph className="snippet"/>
-      </div>
-      <Sessions className="snippet"/>
-      <PathExplorationSnippet className="snippet"/>
-    </Dashboard> 
+    <SetRawData>
+      <Dashboard className="container">
+        <LineGraphControls className="snippet"/>
+        <PageGraphControls className="snippet"/>
+        <div className="snippets">
+          <TrafficSource className="snippet"/>
+          <DevicesGraph className="snippet"/>
+        </div>
+        <Sessions className="snippet"/>
+        <PathExplorationSnippet className="snippet"/>
+      </Dashboard>
+    </SetRawData>
   )
 }
 
@@ -89,4 +86,22 @@ function createDashboard() {
       gap: 1em;
     }
   `
+}
+
+function SetRawData({ children }) {
+  const dataStore = useDataStore(),
+        lineChartStore = useLineChartStore(),
+        pageStatisticStore = usePagesStatisticStore(),
+        trafficSourceStatisticStore = useTrafficSourceStatisticStore()
+
+  const [load, setLoad] = useState(false)
+
+  useEffect(() => {
+    lineChartStore.setRawData(dataStore.rawData)
+    pageStatisticStore.setRawData(dataStore.rawData)
+    trafficSourceStatisticStore.setRawData(dataStore.rawData)
+    setLoad(true)
+  }, [dataStore, lineChartStore, pageStatisticStore, trafficSourceStatisticStore])
+
+  return load ? children : null
 }

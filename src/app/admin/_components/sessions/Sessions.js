@@ -16,7 +16,6 @@ const table_headers = ['Date', 'Session ID', 'New User', 'Duration', 'Device Typ
 export default function Sessions(props) {
   const { rawData } = useLineChartStore()
   const dataInChunks = _.chunk(sortRawDataByDescUpdateAt(rawData), 15)
-  console.log(dataInChunks[0])
   const [pagination, setPagination] = useState({ sessions: dataInChunks[0], page: 1 })
 
   const loadMore = () => {
