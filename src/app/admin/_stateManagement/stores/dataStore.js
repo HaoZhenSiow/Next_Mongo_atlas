@@ -1,5 +1,5 @@
-import { createContextStore, action, persist } from 'easy-peasy';
-import myCustomStorage from '../myCustomStorage';
+import { createContextStore, action, persist } from 'easy-peasy'
+import indexedDB from '../storageEngines/indexedDB';
 
 const DataStore = createContextStore(persist({
   rawData: [],
@@ -8,7 +8,7 @@ const DataStore = createContextStore(persist({
   })
 }, {
   allow: ['rawData'],
-  storage: myCustomStorage('dataStore')
+  storage: indexedDB('dataStore')
 }))
 
 export default DataStore

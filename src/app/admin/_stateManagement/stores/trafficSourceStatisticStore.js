@@ -1,5 +1,5 @@
 import { createContextStore, action, persist } from 'easy-peasy'
-import myCustomStorage from '../myCustomStorage'
+import session from '../storageEngines/session';
 
 const TrafficSourceStatisticStore = createContextStore(persist({
   rawData: [],
@@ -12,7 +12,7 @@ const TrafficSourceStatisticStore = createContextStore(persist({
   })
 }, {
   allow: ['period'],
-  storage: myCustomStorage('TrafficSourceStatisticStore')
+  storage: session('TrafficSourceStatisticStore')
 }))
 
 export default TrafficSourceStatisticStore

@@ -1,6 +1,6 @@
 import { str } from '../../_lib/utils'
 import { createContextStore, action, persist, computed } from 'easy-peasy'
-import myCustomStorage from '../myCustomStorage'
+import session from '../storageEngines/session'
 
 const LineChartStore = createContextStore(persist({
   viewBoxWidth: 1000,
@@ -73,7 +73,7 @@ const LineChartStore = createContextStore(persist({
   })
 }, {
   allow: ['viewBoxWidth', 'viewBoxHeight', 'selectedField', 'period', 'startDate', 'endDate', 'Xinterval', 'page', 'device', 'browser', 'traffic'],
-  storage: myCustomStorage('lineChartStore')
+  storage: session('lineChartStore')
 }))
 
 export default LineChartStore;
