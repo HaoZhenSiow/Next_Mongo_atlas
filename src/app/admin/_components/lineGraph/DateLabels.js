@@ -1,5 +1,5 @@
 import { Fragment } from "react"
-import { useLineChartStore } from "../../_store/lineChartStore"
+import { useLineChartStore } from "../../_stateManagement/stores/lineChartStore"
 export default function DateLabels({ dateArr }) {
   const { viewBoxWidth } = useLineChartStore()
 

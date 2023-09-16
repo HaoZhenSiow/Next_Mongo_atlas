@@ -1,11 +1,11 @@
 'use client'
 import styled from 'styled-components'
-import LineGraph from './LineGraph';
 
-import { useLineChartStore } from '../../_store/lineChartStore';
+import { useLineChartStore } from '../../_stateManagement/stores/lineChartStore';
 
 import XintervalControl from './controls/XintervalControl';
 import PeriodControl from '../controls/PeriodControl';
+import LineGraph from './LineGraph';
 
 const LineGraphControlsStyled = createLineGraphControlsStyled()
 

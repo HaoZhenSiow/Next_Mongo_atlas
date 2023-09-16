@@ -1,4 +1,4 @@
-import { useLineChartStore } from '../../_store/lineChartStore';
+import { useLineChartStore } from '../../_stateManagement/stores/lineChartStore';
 
 export default function YaxisLabel() {
   const { dataDisplayingType, medium } = useLineChartStore()

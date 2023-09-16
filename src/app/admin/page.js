@@ -2,8 +2,10 @@
 import styled from 'styled-components'
 import { fakeSessionsGenerator } from './_lib/fakeData'
 
-import { useLineChartStore } from './_store/lineChartStore'
-import { usePagesStatisticStore } from './_store/pagesStatisticStore'
+import { useDataStore } from './_stateManagement/stores/dataStore'
+import { useLineChartStore } from './_stateManagement/stores/lineChartStore'
+import { usePagesStatisticStore } from './_stateManagement/stores/pagesStatisticStore'
+import { useTrafficSourceStatisticStore } from "./_stateManagement/stores/trafficSourceStatisticStore"
 
 import LineGraphControls from "./_components/lineGraph/LineGraphControls"
 import PageGraphControls from './_components/pageGraph/PageGraphControl'
@@ -17,16 +19,18 @@ const Dashboard = createDashboard()
 const fakseSessions = fakeSessionsGenerator(365)
 
 export default function Home() {
-  const lineChart = useLineChartStore(),
-        pagesStats = usePagesStatisticStore()
-
-  if (lineChart.rawData.length < 1) {
-    lineChart.setRawData(fakseSessions)
+  const dataStore = useDataStore(),
+        lineChartStore = useLineChartStore(),
+        pageStatisticStore = usePagesStatisticStore(),
+        trafficSourceStatisticStore = useTrafficSourceStatisticStore()
+  
+  if (dataStore.rawData.length < 1) {
+    dataStore.setRawData(fakseSessions)
   }
 
-  if (pagesStats.rawData.length < 1) {
-    pagesStats.setRawData(fakseSessions)
-  }
+  lineChartStore.setRawData(dataStore.rawData)
+  pageStatisticStore.setRawData(dataStore.rawData)
+  trafficSourceStatisticStore.setRawData(dataStore.rawData)
   
   return (
     <Dashboard className="container">

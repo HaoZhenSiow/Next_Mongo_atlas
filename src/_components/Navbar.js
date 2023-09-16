@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 import axios from 'axios'
 axios.defaults.validateStatus = false
 
-import AuthStore from "@/_stores/authStore"
+import AuthStore from "@/_stateManagement/stores/authStore"
 
 export default function Navbar() {
   const { email } = AuthStore.useStoreState(state => state),

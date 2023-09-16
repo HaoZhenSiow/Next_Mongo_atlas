@@ -2,7 +2,7 @@
 import styled from 'styled-components'
 import Cookies from 'js-cookie';
 
-import AuthStore from '../_store/authStore';
+import AuthStore from '../_stateManagement/stores/authStore';
 
 const NavbarStyled = createNavbarStyled()
 

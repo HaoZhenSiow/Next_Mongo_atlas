@@ -1,8 +1,8 @@
 import './globals.css'
 import Navbar from '@/_components/Navbar'
 import NavigationEvents from '../admin/_components/NavigationEvents'
-import Store from '@/_stores/Store'
-import PageAuth from '@/_stores/PageAuth'
+import RehydratedStores from '@/_stateManagement/RehydratedStores'
+import PageAuth from '@/_components/PageAuth'
 // import GoogleAnalytics from '@/_components/GoogleAnalytics'
 
 
@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   return (
-    <Store>
+    <RehydratedStores>
       <PageAuth/>
       {/* <GoogleAnalytics/> */}
       <NavigationEvents/>
@@ -21,6 +21,6 @@ export default async function RootLayout({ children }) {
       <div className="pages">
         {children}
       </div>
-    </Store>
+    </RehydratedStores>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 import { usePathname, redirect } from 'next/navigation'
-import AuthStore from '../_store/authStore'
+import AuthStore from '../_stateManagement/stores/authStore'
 
 export default function PageAuth() {
   const { username } = AuthStore.useStoreState(state => state)

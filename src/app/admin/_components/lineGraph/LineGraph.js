@@ -3,7 +3,7 @@
 import styled from 'styled-components'
 import react from 'react'
 
-import { useLineChartStore } from '../../_store/lineChartStore'
+import { useLineChartStore } from '../../_stateManagement/stores/lineChartStore'
 
 import DateLabels from './DateLabels'
 import InsertData from './InsertData'

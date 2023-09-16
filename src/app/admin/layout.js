@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import InitStyle from './InitStyle'
-import Store from './_store/Store'
+import RehydratedStores from './_stateManagement/RehydratedStores'
 import Navbar from './_components/Navbar'
 import PageAuth from './_components/PageAuth'
 
@@ -17,12 +17,12 @@ export default async function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
       </Head>
-      <Store>
+      <RehydratedStores>
         <PageAuth/>
         <InitStyle/>
         <Navbar/>
         {children}
-      </Store>
+      </RehydratedStores>
     </>
   )
 }

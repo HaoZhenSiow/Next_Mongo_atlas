@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import _ from 'lodash'
 
-import { usePagesStatisticStore } from '../../_store/pagesStatisticStore';
+import { usePagesStatisticStore } from '../../_stateManagement/stores/pagesStatisticStore';
 
 import PeriodControl from '../controls/PeriodControl';
 import Table from '../Table';

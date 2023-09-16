@@ -2,7 +2,7 @@ import { createContextStore, action, persist, computed } from 'easy-peasy'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
-import myCustomStorage from './myCustomStorage'
+import myCustomStorage from '../myCustomStorage'
 
 const PagesStatisticStore = createContextStore(persist({
   rawData: [],
@@ -23,8 +23,7 @@ const PagesStatisticStore = createContextStore(persist({
     state.endDate = payload
   }),
 }, {
-  name: 'PagesStatisticStore',
-  allow: ['rawData', 'period', 'startDate', 'endDate'],
+  allow: ['period', 'startDate', 'endDate'],
   storage: myCustomStorage('PagesStatisticStore')
 }))
 

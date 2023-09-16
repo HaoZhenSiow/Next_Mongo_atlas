@@ -4,8 +4,8 @@ import { trackRemoveWorkout } from '@/_lib/EventsTracker'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-import AuthStore from '@/_stores/authStore'
-import WorkoutStore from "@/_stores/workoutStore"
+import AuthStore from '@/_stateManagement/stores/authStore'
+import WorkoutStore from "@/_stateManagement/stores/workoutStore"
 
 const WorkoutDetails = ({ workout }) => {
 

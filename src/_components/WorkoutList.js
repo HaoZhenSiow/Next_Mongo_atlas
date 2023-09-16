@@ -4,8 +4,8 @@ axios.defaults.validateStatus = false
 
 import WorkoutDetails from "@/_components/WorkoutDetails"
 
-import AuthStore from '@/_stores/authStore'
-import WorkoutStore from "@/_stores/workoutStore"
+import AuthStore from '@/_stateManagement/stores/authStore'
+import WorkoutStore from "@/_stateManagement/stores/workoutStore"
 import { useEffect } from "react"
 
 export default function WorkoutList() {

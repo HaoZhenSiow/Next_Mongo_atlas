@@ -1,6 +1,6 @@
 import { str } from "../../_lib/utils"
 
-import { useLineChartStore } from "../../_store/lineChartStore"
+import { useLineChartStore } from "../../_stateManagement/stores/lineChartStore"
 
 const InsertData = () => {
   const { viewBoxWidth, viewBoxHeight, dateArr, dataPointDates, dataAreas, dataDisplayingMap, dataDisplayingMap2, dataDisplayingType, medium } = useLineChartStore(),

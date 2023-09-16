@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import axios from "axios"
 axios.defaults.validateStatus = false
 
-import AuthStore from "../_store/authStore"
+import AuthStore from "../_stateManagement/stores/authStore"
 
 const Main = createMain()
 

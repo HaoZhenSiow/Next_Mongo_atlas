@@ -5,7 +5,7 @@ import { useIntersection } from '@mantine/hooks'
 import prettyMilliseconds from 'pretty-ms'
 import dayjs from 'dayjs'
 
-import { useLineChartStore } from '../../_store/lineChartStore'
+import { useLineChartStore } from '../../_stateManagement/stores/lineChartStore'
 
 import Table from '../Table'
 
@@ -16,6 +16,7 @@ const table_headers = ['Date', 'Session ID', 'New User', 'Duration', 'Device Typ
 export default function Sessions(props) {
   const { rawData } = useLineChartStore()
   const dataInChunks = _.chunk(sortRawDataByDescUpdateAt(rawData), 15)
+  console.log(dataInChunks[0])
   const [pagination, setPagination] = useState({ sessions: dataInChunks[0], page: 1 })
 
   const loadMore = () => {
@@ -33,7 +34,7 @@ export default function Sessions(props) {
   })
 
   useEffect(() => {
-    if (pagination.sessions.length < rawData.length) {
+    if (pagination.sessions?.length < rawData.length) {
       entry?.isIntersecting && loadMore()
     }
   }, [entry])
@@ -43,7 +44,7 @@ export default function Sessions(props) {
       <h2>Sessions</h2>
       <div className='sessions__table'>
         <Table headers={table_headers}>
-          {pagination.sessions.map((session, index) => {
+          {pagination.sessions?.map((session, index) => {
             const attrs = {}
 
             if (index === pagination.sessions.length - 1) {

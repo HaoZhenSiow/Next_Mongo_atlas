@@ -1,5 +1,5 @@
 'use client'
-import AuthStore from "@/_stores/authStore"
+import AuthStore from "@/_stateManagement/stores/authStore"
 import { usePathname, redirect } from 'next/navigation'
 
 export default function PageAuth() {

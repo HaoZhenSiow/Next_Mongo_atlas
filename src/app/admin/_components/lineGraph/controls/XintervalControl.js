@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { useLineChartStore } from "@/app/admin/_store/lineChartStore"
+import { useLineChartStore } from "@/app/admin/_stateManagement/stores/lineChartStore"
 
 const XintervalStyled = createXintervalStyled()
 export default function XintervalControl() {

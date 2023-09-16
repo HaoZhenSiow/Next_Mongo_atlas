@@ -1,7 +1,9 @@
 import styled from 'styled-components'
 
-import PeriodControl from '../controls/PeriodControl';
-import BarGraph from './BarGraph';
+import PeriodControl from '../controls/PeriodControl'
+import BarGraph from './BarGraph'
+
+import { useTrafficSourceStatisticStore } from '../../_stateManagement/stores/trafficSourceStatisticStore'
 
 const TrafficSourceStyled = createTrafficSourceStyled()
 
@@ -22,7 +24,7 @@ export default function TrafficSource(props) {
             <option value="Session Conversion Rate">Session Conversion Rate</option>
             <option value="User Conversion Rate">User Conversion Rate</option>
         </select>
-        {/* <PeriodControl/> */}
+        <PeriodControl store={useTrafficSourceStatisticStore}/>
       </div>
       <BarGraph/>
     </TrafficSourceStyled>
