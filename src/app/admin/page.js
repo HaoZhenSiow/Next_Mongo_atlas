@@ -97,9 +97,9 @@ function SetRawData({ children }) {
   const [load, setLoad] = useState(false)
 
   useEffect(() => {
-    lineChartStore.setRawData(dataStore.rawData)
-    pageStatisticStore.setRawData(dataStore.rawData)
-    trafficSourceStatisticStore.setRawData(dataStore.rawData)
+    lineChartStore.setState('rawData', dataStore.rawData)
+    pageStatisticStore.setState('rawData', dataStore.rawData)
+    trafficSourceStatisticStore.setState('rawData', dataStore.rawData)
     setLoad(true)
   }, [dataStore, lineChartStore, pageStatisticStore, trafficSourceStatisticStore])
 

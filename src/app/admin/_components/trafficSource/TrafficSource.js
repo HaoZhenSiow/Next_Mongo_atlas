@@ -8,11 +8,13 @@ import { useTrafficSourceStatisticStore } from '../../_stateManagement/stores/tr
 const TrafficSourceStyled = createTrafficSourceStyled()
 
 export default function TrafficSource(props) {
+  const { selectedField, setState, trafficSources, dataDisplayingMap, isRate } = useTrafficSourceStatisticStore()
+
   return (
     <TrafficSourceStyled className={props.className}>
       <h2>Traffic Source</h2>
       <div className="controls">
-        <select>
+        <select value={selectedField} onChange={e => setState('selectedField', e.target.value)}>
             <option value="Sessions" defaultValue>Sessions</option>
             <option value="Bounce Rate">Bounce Rate</option>
             <option value="Engaged Sessions">Engaged Sessions</option>
@@ -26,7 +28,15 @@ export default function TrafficSource(props) {
         </select>
         <PeriodControl store={useTrafficSourceStatisticStore}/>
       </div>
-      <BarGraph/>
+      <div>
+        {trafficSources.map((src) => (
+          <div className="sources" key={src}>
+            <p><b>{src}</b></p>
+            <p>{dataDisplayingMap.get(src) + isRate}</p>
+          </div>
+        ))}
+      </div>
+      {/* <BarGraph/> */}
     </TrafficSourceStyled>
   );
 }
@@ -36,6 +46,11 @@ function createTrafficSourceStyled() {
     width: 55%;
 
     .controls {
+      justify-content: space-between;
+    }
+
+    .sources {
+      display: flex;
       justify-content: space-between;
     }
   `

@@ -4,11 +4,11 @@ import { useLineChartStore } from "@/app/admin/_stateManagement/stores/lineChart
 
 const XintervalStyled = createXintervalStyled()
 export default function XintervalControl() {
-  const { Xinterval, setXinterval } = useLineChartStore()
+  const { Xinterval, setState } = useLineChartStore()
 
   return (
     <XintervalStyled>
-      <select value={Xinterval} onChange={e => setXinterval(e.target.value)}>
+      <select value={Xinterval} onChange={e => setState('Xinterval', e.target.value)}>
         <option value="day">daily</option>
         <option value="week">weekly</option>
         <option value="month">monthly</option>]

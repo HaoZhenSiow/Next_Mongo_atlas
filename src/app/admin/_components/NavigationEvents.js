@@ -35,7 +35,11 @@ export default function NavigationEvents() {
       recordEvent(recordPath, 'pageView')
     }
 
-    unload.add(() => recordEvent(recordPath, 'leaveSite'))
+    const leavePageEvent = unload.add(() => recordEvent(recordPath, 'leaveSite'))
+
+    return () => {
+      leavePageEvent.remove()
+    }
 
   }, [pathName])
 

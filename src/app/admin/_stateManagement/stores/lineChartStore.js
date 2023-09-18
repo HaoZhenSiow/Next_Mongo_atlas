@@ -11,7 +11,6 @@ const LineChartStore = createContextStore(persist({
   startDate: new Date(),
   endDate: new Date(),
   Xinterval: 'day',
-  page: 'All Pages',
   device: 'All Devices',
   browser: 'All Browsers',
   traffic: 'all sources',
@@ -32,44 +31,8 @@ const LineChartStore = createContextStore(persist({
   total2: computed(computeTotal2),
   polyline: computed(computePolyline1),
   polyline2: computed(computePolyline2),
-  setSelectedField: action((state, payload) => {
-    state.selectedField = payload
-  }),
-  setRawData: action((state, payload) => {
-    state.rawData = payload
-  }),
-  setPage: action((state, payload) => {
-    state.page = payload
-  }),
-  setDevice: action((state, payload) => {
-    state.device = payload
-  }),
-  setBrowser: action((state, payload) => {
-    state.browser = payload
-  }),
-  setTraffic: action((state, payload) => {
-    state.traffic = payload
-  }),
-  setDevice2: action((state, payload) => {
-    state.device2 = payload
-  }),
-  setBrowser2: action((state, payload) => {
-    state.browser2 = payload
-  }),
-  setTraffic2: action((state, payload) => {
-    state.traffic2 = payload
-  }),
-  setPeriod: action((state, payload) => {
-    state.period = payload
-  }),
-  setStartDate: action((state, payload) => {
-    state.startDate = payload
-  }),
-  setEndDate: action((state, payload) => {
-    state.endDate = payload
-  }),
-  setXinterval: action((state, payload) => {
-    state.Xinterval = payload
+  setState: action((state, { stateName, val }) => {
+    state[stateName] = val
   })
 }, {
   allow: ['viewBoxWidth', 'viewBoxHeight', 'selectedField', 'period', 'startDate', 'endDate', 'Xinterval', 'page', 'device', 'browser', 'traffic'],
@@ -80,8 +43,11 @@ export default LineChartStore;
 
 export function useLineChartStore() {
   const states = LineChartStore.useStoreState(state => state),
-        actions = LineChartStore.useStoreActions(actions => actions)
-  return { ...states, ...actions }
+        actions = LineChartStore.useStoreActions(actions => actions),
+        setState = function(stateName, val) {
+          return actions.setState({ stateName, val })
+        }
+  return { ...states, ...actions, setState }
 }
 
 function createDateArr({ period }) {

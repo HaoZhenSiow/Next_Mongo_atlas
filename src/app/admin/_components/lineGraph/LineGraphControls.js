@@ -11,14 +11,14 @@ const LineGraphControlsStyled = createLineGraphControlsStyled()
 
 export default function LineGraphControls({ className }) {
 
-  const { total, setSelectedField, selectedField, device, setDevice, browsers, browser, setBrowser, trafficSources, traffic, setTraffic, device2, setDevice2, browser2, setBrowser2, traffic2, setTraffic2, total2 } = useLineChartStore()
+  const { total, selectedField, device, browsers, browser, trafficSources, traffic, device2, browser2, traffic2, total2, setState } = useLineChartStore()
 
   return (
     <LineGraphControlsStyled className={className}>
       <h2>Overview</h2>
       <div className="controls">
         <div className="field">
-          <select value={selectedField} onChange={e => setSelectedField(e.target.value)}>
+          <select value={selectedField} onChange={e => setState('selectedField', e.target.value)}>
             <option value="Sessions" defaultValue>Sessions</option>
             <option value="Bounce Rate">Bounce Rate</option>
             <option value="Engaged Sessions">Engaged Sessions</option>
@@ -36,19 +36,19 @@ export default function LineGraphControls({ className }) {
       <LineGraph/>
       <div className="controls matrix1">
         <p>Matrix 1</p>
-        <select value={device} onChange={e => setDevice(e.target.value)}>
+        <select value={device} onChange={e => setState('device', e.target.value)}>
           <option value="All Devices" defaultValue>All Devices</option>
           <option value="desktop">Desktop</option>
           <option value="tablet">Tablet</option>
           <option value="mobile">Mobile</option>
         </select>
-        <select value={browser} onChange={e => setBrowser(e.target.value)}>
+        <select value={browser} onChange={e => setState('browser', e.target.value)}>
           <option value="All Browsers" defaultValue>All Browsers</option>
           {browsers.map(browser => (
             <option key={browser} value={browser}>{browser}</option>
           ))}
         </select>
-        <select value={traffic} onChange={e => setTraffic(e.target.value)}>
+        <select value={traffic} onChange={e => setState('traffic', e.target.value)}>
           <option value="all sources" defaultValue>All Sources</option>
           {trafficSources.map(referrer => (
             <option key={referrer} value={referrer}>{referrer}</option>
@@ -58,19 +58,19 @@ export default function LineGraphControls({ className }) {
       </div>
       <div className="controls matrix2">
         <p>Matrix 2</p>
-        <select value={device2} onChange={e => setDevice2(e.target.value)}>
+        <select value={device2} onChange={e => setState('device2', e.target.value)}>
           <option value="All Devices" defaultValue>All Devices</option>
           <option value="desktop">Desktop</option>
           <option value="tablet">Tablet</option>
           <option value="mobile">Mobile</option>
         </select>
-        <select value={browser2} onChange={e => setBrowser2(e.target.value)}>
+        <select value={browser2} onChange={e => setState('browser2', e.target.value)}>
           <option value="All Browsers" defaultValue>All Browsers</option>
           {browsers.map(browser => (
             <option key={browser} value={browser}>{browser}</option>
           ))}
         </select>
-        <select value={traffic2} onChange={e => setTraffic2(e.target.value)}>
+        <select value={traffic2} onChange={e => setState('traffic2', e.target.value)}>
           <option value="all sources" defaultValue>All Sources</option>
           {trafficSources.map(referrer => (
             <option key={referrer} value={referrer}>{referrer}</option>

@@ -10,18 +10,9 @@ const PagesStatisticStore = createContextStore(persist({
   startDate: new Date(),
   endDate: new Date(),
   stats: computed(computeStats),
-  setRawData: action((state, payload) => {
-    state.rawData = payload
-  }),
-  setPeriod: action((state, payload) => {
-    state.period = payload
-  }),
-  setStartDate: action((state, payload) => {
-    state.startDate = payload
-  }),
-  setEndDate: action((state, payload) => {
-    state.endDate = payload
-  }),
+  setState: action((state, { stateName, val }) => {
+    state[stateName] = val
+  })
 }, {
   allow: ['period', 'startDate', 'endDate'],
   storage: session('PagesStatisticStore')
@@ -31,8 +22,12 @@ export default PagesStatisticStore;
 
 export function usePagesStatisticStore() {
   const states = PagesStatisticStore.useStoreState(state => state),
-        actions = PagesStatisticStore.useStoreActions(actions => actions)
-  return { ...states, ...actions }
+        actions = PagesStatisticStore.useStoreActions(actions => actions),
+        setState = function(stateName, val) {
+          return actions.setState({ stateName, val })
+        }
+        
+  return { ...states, ...actions, setState }
 }
 
 function computeStats({ rawData, period }) {

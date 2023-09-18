@@ -13,7 +13,7 @@ const PeriodControlStyled = createPeriodControlStyled()
 export default memo(PeriodControl)
 
 function PeriodControl({ store }) {
-  const { period, startDate, endDate, setPeriod, setStartDate, setEndDate } = store()
+  const { period, startDate, endDate, setState } = store()
 
   const customDateRange = period.startDate && dayjs(period.startDate).format('Do MMM') + ' - ' + dayjs(period.endDate).format('Do MMM')
 
@@ -28,7 +28,7 @@ function PeriodControl({ store }) {
 
   const handlePeriodChange = (event) => {
     const isNotCustom = event.target.value !== 'custom'
-    if (isNotCustom) return setPeriod(event.target.value)
+    if (isNotCustom) return setState('period', event.target.value)
     setShowSelectionRange(true)
   }
 
@@ -37,12 +37,12 @@ function PeriodControl({ store }) {
       startDate: event.selection.startDate,
       endDate: event.selection.endDate
     })
-    setStartDate(event.selection.startDate)
-    setEndDate(event.selection.endDate)
+    setState('startDate', event.selection.startDate)
+    setState('endDate', event.selection.endDate)
   }
 
   const handleApplySelection = () => {
-    setPeriod({ startDate, endDate })
+    setState('period', { startDate, endDate })
     setShowSelectionRange(false)
   }
 
