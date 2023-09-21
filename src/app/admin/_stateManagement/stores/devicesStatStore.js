@@ -1,55 +1,85 @@
 import { createContextStore, action, persist, computed } from 'easy-peasy'
 import dayjs from 'dayjs';
+// import sortBy from 'sort-by';
 import session from '../storageEngines/session'
 
-const TrafficSourceStatisticStore = createContextStore(persist({
+const DevicesStatStore = createContextStore(persist({
   rawData: [],
-  selectedField: 'Sessions',
+  userType: 'Total Users',
+  selectedField: 'All',
   period: 'Last 7 days',
   startDate: new Date(),
   endDate: new Date(),
-  // trafficSources: computed(listTrafficSources),
+  trafficSources: computed(listTrafficSources),
   dataDisplayingMap: computed(setDataDisplayingMap),
-  isRate: computed(({ selectedField }) => selectedField.endsWith('Rate') ? '%' : ''),
   setState: action((state, { stateName, val }) => {
     state[stateName] = val
   })
 }, {
-  allow: ['selectedField', 'period'],
-  storage: session('TrafficSourceStatisticStore')
+  allow: ['userType', 'selectedField', 'period'],
+  storage: session('DevicesStatStore')
 }))
 
-export default TrafficSourceStatisticStore
+export default DevicesStatStore
 
 
-export function useTrafficSourceStatisticStore() {
-  const states = TrafficSourceStatisticStore.useStoreState(state => state),
-        actions = TrafficSourceStatisticStore.useStoreActions(actions => actions),
+export function useDevicesStatStore() {
+  const states = DevicesStatStore.useStoreState(state => state),
+        actions = DevicesStatStore.useStoreActions(actions => actions),
         setState = function(stateName, val) {
           return actions.setState({ stateName, val })
         }
   return { ...states, ...actions, setState }
 }
 
-// function listTrafficSources({ rawData }) {
-//   const filter = new Set(rawData.map(session => (session.referrer)))
-//   return [...filter]
-// }
+function listTrafficSources({ rawData }) {
+  const filter = new Set(rawData.map(session => (session.referrer)))
+  return [...filter]
+}
 
-function setDataDisplayingMap({ rawData, period, selectedField, isRate }) {
+function setDataDisplayingMap({ rawData, period, userType, selectedField }) {
   if (rawData.length <= 0) return
 
-  const filteredData = filterByPeriod(rawData, period),
-        segmentedData = segmentDataByTrafficSource(filteredData),
-        result = computeResult(segmentedData, selectedField)
+  let filteredData = [],
+      segmentedData = new Map()
+      
+  filteredData = filterByPeriod(rawData, period)
+  filteredData = filterByUserType(filteredData, userType)
 
-  if (isRate) return result
+  // console.log(filteredData.sort(sortBy('device', 'browser', 'resolution')))
+  switch (selectedField) {
+    case 'Device':
+      filteredData.forEach(session => {
+        const segment = segmentedData.get(session.device) || []
+        segmentedData.set(session.device, [...segment, session])
+      })
 
-  let total = 0
-  result.forEach(val => {total += val})
-  result.set('total', total)
-  
-  return result
+      return sortMapByArrayLength(segmentedData)
+    case 'Browser':
+      filteredData.forEach(session => {
+        const segment = segmentedData.get(session.browser) || []
+        segmentedData.set(session.browser, [...segment, session])
+      })
+
+      return sortMapByArrayLength(segmentedData)
+    case 'Screen Resolution':
+      filteredData.forEach(session => {
+        const segment = segmentedData.get(session.resolution) || []
+        segmentedData.set(session.resolution, [...segment, session])
+      })
+
+      return sortMapByArrayLength(segmentedData)
+    // default:
+    //   const sortedData = filteredData.sort(sortBy('device', 'resolution', 'browser'))
+
+    //   segmentedData = segmentDataByTech(sortedData)
+
+    //   console.log(sortMapByArrayLength(segmentedData))
+  }
+        // segmentedData = segmentDataByTrafficSource(filteredData),
+        // result = computeResult(segmentedData, selectedField)
+
+  // return result
 }
 
 function filterByPeriod(rawData, period) {
@@ -82,12 +112,24 @@ function filterBetween(rawData, period) {
   })
 }
 
-function segmentDataByTrafficSource(filteredData) {
+function filterByUserType(filteredData, userType) {
+  switch (userType) {
+    case 'New Users':
+      return filteredData.filter(session => session.newUser)
+    case 'Returning Users':
+      return filteredData.filter(session => !session.newUser)
+    default:
+      return filteredData
+  }
+}
+
+function segmentDataByTech(sortedData) {
   const segmentedData = new Map()
 
-  filteredData.forEach(session => {
-    const segment = segmentedData.get(session.referrer) || []
-    segmentedData.set(session.referrer, [...segment, session])
+  sortedData.forEach(session => {
+    const str = session.device + ' ' + session.resolution + ' ' + session.browser,
+          segment = segmentedData.get(str) || []
+    segmentedData.set(str, [...segment, session])
   })
 
   return segmentedData
@@ -175,4 +217,14 @@ function filterConverted(sessions) {
   return sessions.filter(session => {
     return session.events.some(event => event.type === 'conversion')
   })
+}
+
+function sortMapByArrayLength(inputMap) {
+  const keyValueArray = Array.from(inputMap)
+
+  keyValueArray.sort((a, b) => b[1].length- a[1].length)
+
+  const sortedMap = new Map(keyValueArray)
+
+  return sortedMap
 }

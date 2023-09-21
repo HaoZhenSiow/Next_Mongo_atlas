@@ -19,6 +19,7 @@ const InitStyle = createGlobalStyle`
   --bg-color2: #333535;
   --bg-color3: #dbdbdb;
   --bg-color4: #40444b;
+  --bg-color5: #a4a4a4;
   --text-color: #ffffff;
   --matrix1-color: #97f5ff;
   --matrix2-color: #c2ff97;

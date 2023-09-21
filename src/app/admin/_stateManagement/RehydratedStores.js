@@ -5,13 +5,15 @@ import DataStore from "./stores/dataStore"
 import LineChartStore from "./stores/lineChartStore"
 import PagesStatisticStore from "./stores/pagesStatisticStore"
 import TrafficSourceStatisticStore from "./stores/trafficSourceStatisticStore"
+import DevicesStatStore from "./stores/devicesStatStore"
 
 const stores = [
   AuthStore,
   DataStore,
   LineChartStore,
   PagesStatisticStore,
-  TrafficSourceStatisticStore
+  TrafficSourceStatisticStore,
+  DevicesStatStore
 ]
 
 export default function RehydratedStores({ children }) {
