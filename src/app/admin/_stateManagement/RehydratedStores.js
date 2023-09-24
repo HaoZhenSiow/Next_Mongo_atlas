@@ -6,6 +6,7 @@ import LineChartStore from "./stores/lineChartStore"
 import PagesStatisticStore from "./stores/pagesStatisticStore"
 import TrafficSourceStatisticStore from "./stores/trafficSourceStatisticStore"
 import DevicesStatStore from "./stores/devicesStatStore"
+import PathExplorationStore from "./stores/pathExplorationStore"
 
 const stores = [
   AuthStore,
@@ -13,7 +14,8 @@ const stores = [
   LineChartStore,
   PagesStatisticStore,
   TrafficSourceStatisticStore,
-  DevicesStatStore
+  DevicesStatStore,
+  PathExplorationStore
 ]
 
 export default function RehydratedStores({ children }) {

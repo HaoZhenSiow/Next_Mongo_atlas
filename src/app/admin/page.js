@@ -8,6 +8,7 @@ import { useLineChartStore } from './_stateManagement/stores/lineChartStore'
 import { usePagesStatisticStore } from './_stateManagement/stores/pagesStatisticStore'
 import { useTrafficSourceStatisticStore } from "./_stateManagement/stores/trafficSourceStatisticStore"
 import { useDevicesStatStore } from './_stateManagement/stores/devicesStatStore'
+import { usePathExplorationStore } from './_stateManagement/stores/pathExplorationStore'
 
 import LineGraphControls from "./_components/lineGraph/LineGraphControls"
 import PageGraphControls from './_components/pageGraph/PageGraphControl'
@@ -94,7 +95,8 @@ function SetRawData({ children }) {
         lineChartStore = useLineChartStore(),
         pageStatisticStore = usePagesStatisticStore(),
         trafficSourceStatisticStore = useTrafficSourceStatisticStore(),
-        devicesStatStore = useDevicesStatStore()
+        devicesStatStore = useDevicesStatStore(),
+        pathExplorationStore = usePathExplorationStore()
 
   const [load, setLoad] = useState(false)
 
@@ -103,8 +105,9 @@ function SetRawData({ children }) {
     pageStatisticStore.setState('rawData', dataStore.rawData)
     trafficSourceStatisticStore.setState('rawData', dataStore.rawData)
     devicesStatStore.setState('rawData', dataStore.rawData)
+    pathExplorationStore.setState('rawData', dataStore.rawData)
     setLoad(true)
-  }, [dataStore, lineChartStore, pageStatisticStore, trafficSourceStatisticStore, devicesStatStore])
+  }, [dataStore, lineChartStore, pageStatisticStore, trafficSourceStatisticStore, devicesStatStore, pathExplorationStore])
 
   return load ? children : null
 }

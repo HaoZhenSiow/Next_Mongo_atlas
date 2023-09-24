@@ -10,7 +10,7 @@ const DevicesGraphStyled = createDevicesGraphStyled(),
 
 export default function DevicesGraph(props) {
   const { userType, selectedField, setState, dataDisplayingMap } = useDevicesStatStore()
-  console.log(dataDisplayingMap)
+
   return (
     <DevicesGraphStyled className={props.className}>
       <h2>Devices</h2>
