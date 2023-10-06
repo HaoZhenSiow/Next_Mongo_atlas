@@ -28,7 +28,7 @@ export default function DevicesGraph(props) {
         <PeriodControl store={useDevicesStatStore}/>
       </div>
       <div>
-        {[...dataDisplayingMap].map(seg => (
+        {dataDisplayingMap && [...dataDisplayingMap].map(seg => (
           <Fragment key={seg}>
             <div className="sources">
               <p><b>{seg[0]}</b></p>
