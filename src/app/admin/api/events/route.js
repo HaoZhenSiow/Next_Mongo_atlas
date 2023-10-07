@@ -8,7 +8,8 @@ const {conn, sessionModel, waitForConnection} = connectDB()
 export async function POST(req) {
   
   const { referrer, ...eventDetails } = await req.json(),
-        ip = process.env.DEV_MODE ? 'dev mode' : getHashIp(req),
+        // ip = process.env.DEV_MODE ? 'dev mode' : getHashIp(req),
+        ip = req.headers.get('x-forwarded-for'),
         uid = await getUID(req)
 
   process.env.DEV_MODE && console.log(chalk.bgGreen(eventDetails.event, eventDetails.type, req.headers.get('x-forwarded-for')))

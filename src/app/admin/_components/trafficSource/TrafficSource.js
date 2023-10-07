@@ -34,7 +34,7 @@ export default function TrafficSource(props) {
         <PeriodControl store={useTrafficSourceStatisticStore}/>
       </div>
       <div>
-        {trafficSources.map((src) => (
+        {trafficSources.length > 0 ? trafficSources.map((src) => (
           <Fragment key={src}>
             <div className="sources">
               <p><b>{src}</b></p>
@@ -42,7 +42,7 @@ export default function TrafficSource(props) {
             </div>
             <Progress $val={dataDisplayingMap.get(src)} $max={dataDisplayingMap.get('total')} $isRate={isRate}/>
           </Fragment>
-        ))}
+        )) : <p>No data</p>}
       </div>
       {/* <BarGraph/> */}
     </TrafficSourceStyled>

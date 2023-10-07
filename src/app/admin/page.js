@@ -16,6 +16,7 @@ import TrafficSource from './_components/trafficSource/TrafficSource'
 import DevicesGraph from './_components/devicesGraph/DevicesGraph'
 import Sessions from './_components/sessions/Sessions'
 import PathExplorationSnippet from './_components/pathExploration/PathExplorationSnippet'
+import IPfilter from './_components/IPfilter/IPfilter'
 
 
 const Dashboard = createDashboard()
@@ -40,6 +41,7 @@ export default function Home() {
         </div>
         <Sessions className="snippet"/>
         <PathExplorationSnippet className="snippet"/>
+        <IPfilter className="snippet"/>
       </Dashboard>
     </SetRawData>
   )

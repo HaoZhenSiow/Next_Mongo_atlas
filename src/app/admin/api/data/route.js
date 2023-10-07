@@ -2,8 +2,9 @@ import connectDB from "../../_db/adminDB";
 import { res } from "../../_lib/utils";
 import chalk from "chalk";
 
-const conn = connectDB(),
-      sessionModel = conn.model('session')
+// const conn = connectDB(),
+//       sessionModel = conn.model('session')
+const {conn, sessionModel, waitForConnection} = connectDB()
 
 
 export async function GET(req) {

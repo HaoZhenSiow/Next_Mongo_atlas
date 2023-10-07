@@ -56,7 +56,9 @@ export default function PageGraphControls(props) {
       </div>
       <div>
         <Table headers={headers}>
-          {rows}
+          {sortedEntries.length > 0 ? rows : <tr>
+           <td colSpan={6} style={{textAlign: 'center'}}>No data</td>
+          </tr>}
         </Table>
       </div>
     </PageGraphControlsStyled>

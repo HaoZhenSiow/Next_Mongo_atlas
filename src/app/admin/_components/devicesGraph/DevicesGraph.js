@@ -28,7 +28,7 @@ export default function DevicesGraph(props) {
         <PeriodControl store={useDevicesStatStore}/>
       </div>
       <div>
-        {dataDisplayingMap && [...dataDisplayingMap].map(seg => (
+        {dataDisplayingMap ? [...dataDisplayingMap].map(seg => (
           <Fragment key={seg}>
             <div className="sources">
               <p><b>{seg[0]}</b></p>
@@ -36,7 +36,7 @@ export default function DevicesGraph(props) {
             </div>
             <Progress $val={seg[1].length} $max={[...dataDisplayingMap].reduce((prev, val) => prev + val[1].length, 0)}/>
           </Fragment>
-        ))}
+        )) : <p>No data</p>}
       </div>
     </DevicesGraphStyled>
   );

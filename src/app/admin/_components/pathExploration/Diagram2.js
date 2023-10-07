@@ -63,7 +63,6 @@ function createDiagramStyled() {
     }
   })`
     width: ${props => props.$extrinsicWidth};
-    background-color: black;
 
     text {
       fill: white;

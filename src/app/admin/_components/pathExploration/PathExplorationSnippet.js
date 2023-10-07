@@ -19,8 +19,6 @@ export default function PathExplorationSnippet(props) {
     setResetKey((prevKey) => prevKey + 1);
   }
   // const de = dataDisplayingObj.next()
-
-  // console.log(de['pageA-version1'].next())
   return (
     <PathExplorationSnippetStyled className={props.className}>
       <h2>Path Exploration</h2>
