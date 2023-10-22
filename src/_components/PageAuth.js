@@ -9,12 +9,12 @@ export default function PageAuth() {
         protectedPath = ['/'],
         authPath = ['/login', '/signup']
 
-  if (protectedPath.includes(currentPath) && !email) {
-    redirect('/login')
-  }
-  if (authPath.includes(currentPath) && email) {
-    redirect('/')
-  }
+  // if (protectedPath.includes(currentPath) && !email) {
+  //   redirect('/login')
+  // }
+  // if (authPath.includes(currentPath) && email) {
+  //   redirect('/')
+  // }
 
   return null
 }
